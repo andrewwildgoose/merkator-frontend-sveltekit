@@ -8,6 +8,7 @@
     async function fetchRoutesStore() {
         console.log("attemtping fetchRoutesStore")
         const response = await fetch('http://localhost:3000/merkator/user/64a96ca81716a23702501f57/routes');
+        console.log("response: ", response);
         routesStore = await response.json();
         console.log("COMPLETED fetchRoutesStore!")
     }

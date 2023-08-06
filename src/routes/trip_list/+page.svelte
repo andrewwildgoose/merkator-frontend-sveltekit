@@ -5,8 +5,10 @@
 <div class="trip_list">
     
     <button><a href="/">home</a></button>
+    <button><a href="/trip_list">trips</a></button>
     <button><a href="/route_list">routes</a></button>
     <button><a href="/user_home">user home</a></button>
+    <button><a href="/route_detail">route detail</a></button>
 
     <TripsList />
 </div>
