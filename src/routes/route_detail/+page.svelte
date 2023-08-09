@@ -1,4 +1,6 @@
 <script>
+    import NavBar from "../../lib/navBar.svelte";
+
     let routeDetail;
 
     async function fetchRoute() {
@@ -13,6 +15,7 @@
 </script>
 
 <div class="route_detail" on:load={fetchRoute()}>
+    <NavBar />
     {#if routeDetail}
     <p>
         Route Name: {routeDetail.metadata.name}<br>
