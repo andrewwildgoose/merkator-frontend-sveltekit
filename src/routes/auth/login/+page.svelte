@@ -1,26 +1,68 @@
 <script>
+    import { invalidateAll, goto } from '$app/navigation';
+    import { applyAction} from '$app/forms';
 
     import NavBar from "../../../lib/navBar.svelte";
 
-    /** @type {import('./$types').Actions} */
-    export const actions = {
-        default: async (event) => {
-        // TODO log the user in
+    async function handleSubmit(event) {
+        event.preventDefault();
+
+        const formData = {
+            email: event.target.email.value,
+            password: event.target.password.value
+        };
+
+        const response = await fetch("http://localhost:3000/merkator/api/v1/auth/register", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+        });
+
+        const result = await response.json();
+        console.log(result)
+
+        if (result.token) {
+            console.log("success!")
+            // Store the JWT in local storage
+            localStorage.setItem('token', result.token);
+            console.log("token saved to local storage: ", result.token)
+
+            // rerun all `load` functions, following the successful update
+            await invalidateAll();
+            goto("/"); // Redirect to a success page after registration
+            console.log("redirected")
+        } else {
+            // Handle registration failure
+            console.log("unsuccessful")
+            applyAction(result);
         }
-    };
+    }
 </script>
 
 <div>
     <NavBar />
 </div>
-<form method="POST">
-    <label>
-        Email
-        <input name="email" type="email">
-    </label>
-    <label>
-        Password
-        <input name="password" type="password">
-    </label>
-    <button>Log in</button>
-</form>
+
+<div class="login">
+    <form method="POST" on:submit|preventDefault={handleSubmit}>
+        <label>
+            Email
+            <input name="email" type="email">
+        </label>
+        <label>
+            Password
+            <input name="password" type="password">
+        </label>
+        <button>Log in</button>
+    </form>
+</div>
+
+<style>
+        .login {
+        text-align: center;
+        display: block;
+        margin: 20px auto;
+    }
+</style>
