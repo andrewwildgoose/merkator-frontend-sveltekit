@@ -1,11 +1,12 @@
 <script>
     
     import { units } from '../stores';
+    import userDetails from '/routes/user'
 
     //store the routes to display for the user
     let routesStore;
 
-    async function fetchRoutesStore() {
+    async function fetchRoutesStore(userDetails) {
         console.log("attemtping fetchRoutesStore")
         const response = await fetch('http://localhost:3000/merkator/user/64a96ca81716a23702501f57/routes');
         console.log("response: ", response);

@@ -9,7 +9,7 @@
         console.log("response: ", response);
         const responseData = await response.json();
         console.log("responseData", responseData);
-        routeDetail = responseData; // No need for responseData.metadata here
+        routeDetail = responseData;
         console.log("route Details", routeDetail);
     }
 </script>

@@ -3,7 +3,7 @@
     import { goto } from '$app/navigation';
     import NavBar from "../../lib/navBar.svelte";
 
-    let userDetails = null; // Store fetched user details
+    export let userDetails = null; // Store fetched user details
 
     onMount(async () => {
         const token = localStorage.getItem('token');
