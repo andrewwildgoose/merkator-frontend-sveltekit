@@ -11,8 +11,9 @@
             email: event.target.email.value,
             password: event.target.password.value
         };
+        console.log(JSON.stringify(formData))
 
-        const response = await fetch("http://localhost:3000/merkator/api/v1/auth/register", {
+        const response = await fetch("http://localhost:3000/merkator/api/v1/auth/authenticate", {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -31,7 +32,7 @@
 
             // rerun all `load` functions, following the successful update
             await invalidateAll();
-            goto("/"); // Redirect to a success page after registration
+            goto("/user"); // Redirect to a success page after registration
             console.log("redirected")
         } else {
             // Handle registration failure
