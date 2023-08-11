@@ -4,21 +4,12 @@
     import RoutesList from "../lib/routesList.svelte";
     import TripsList from "../lib/tripsList.svelte";
 
-    let welcome;
 
-    async function fetchWelcome() {
-        console.log("attemtping fetchWelcome")
-        const response = await fetch('http://localhost:3000/merkator/user/');
-        const responseData = await response.json();
-        welcome = responseData.welcome_message;
-    }
+
 </script>
 
-<div class="home" on:load={fetchWelcome()}>
-    <p>{welcome}</p>
+<div class="home">
     <NavBar />
-    
-    
 </div>
 
 <div class="homeFeed">

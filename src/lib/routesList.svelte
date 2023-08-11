@@ -1,18 +1,37 @@
 <script>
     
     import { units } from '../stores';
-    import userDetails from '/routes/user'
+    import { onMount } from 'svelte';
+    
 
     //store the routes to display for the user
     let routesStore;
 
-    async function fetchRoutesStore(userDetails) {
-        console.log("attemtping fetchRoutesStore")
-        const response = await fetch('http://localhost:3000/merkator/user/64a96ca81716a23702501f57/routes');
-        console.log("response: ", response);
-        routesStore = await response.json();
-        console.log("COMPLETED fetchRoutesStore!")
-    }
+    onMount(async () => {
+        const token = localStorage.getItem('token');
+        
+        if (!token) {
+            // Redirect to login if token is not present
+            goto('/login');
+            return;
+        }
+        
+        const headers = {
+            'Authorization': `Bearer ${token}`
+            
+        };
+
+        // Fetch user's routes from the backend
+        const response = await fetch('http://localhost:3000/merkator/user/routes', { headers });
+        if (response.ok) {
+            routesStore = await response.json();
+            console.log(routesStore);
+            
+        } else {
+            // Handle error, e.g., unauthorized
+            console.error('Failed to fetch user details');
+        }
+    });
 
     //handle click on the delete route button
     const handleClick = (id) => {
@@ -22,7 +41,7 @@
 
 </script>
 
-<div class="routesListFeed" on:load={fetchRoutesStore()}>
+<div class="routesListFeed">
     
     <h1>Routes</h1>
     
@@ -30,7 +49,13 @@
         {#each routesStore as route (route.id)}
             <div class='centre'>
                 <h4>{route.routeName}</h4>
-                <p>{$units}<br>{route.routeDescription}</p>
+                <p>Distance: {route.routeLength} {$units}
+                    <br>
+                    Elevation Gain: {route.routeElevationGain}
+                    <br>
+                    Elevation Loss: {route.routeElevationLoss}
+                    {#if route.routeDescription !="Optional.empty"}{route.routeDescription}{/if}
+                </p>
                 <button on:click={() => handleClick(route.id)}>delete route</button>
             </div>
             <br>

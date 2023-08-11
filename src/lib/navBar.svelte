@@ -8,3 +8,11 @@
     <button><a href="/auth/register">register</a></button>
     
 </div>
+
+<style>
+    .navBar {
+    text-align: center;
+    display: block;
+    margin: 20px auto;
+    }
+</style>
