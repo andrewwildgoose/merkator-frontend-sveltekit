@@ -1,27 +1,27 @@
 <script>
     import Card from "../lib/card.svelte";
     import NavBar from "../lib/navBar.svelte";
-    import RoutesList from "../lib/routesList.svelte";
-    import TripsList from "../lib/tripsList.svelte";
-
-
+    import RoutesFeed from "../lib/RoutesFeed.svelte";
+    import TripsFeed from "../lib/TripsFeed.svelte";
 
 </script>
 
 <div class="home">
     <NavBar />
+    
 </div>
 
 <div class="homeFeed">
+
     <div class="routeFeed">
         <Card>
-            <RoutesList /> 
+            <RoutesFeed />
         </Card>
     </div>
 
     <div class="tripFeed">
         <Card>
-            <TripsList />
+            <TripsFeed />
         </Card>
     </div>
 </div>
@@ -38,5 +38,4 @@
         text-align: center;
         
     }
-
 </style>

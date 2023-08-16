@@ -11,7 +11,6 @@
             email: event.target.email.value,
             password: event.target.password.value
         };
-        console.log(JSON.stringify(formData))
 
         const response = await fetch("http://localhost:3000/merkator/api/v1/auth/authenticate", {
             method: 'POST',
@@ -22,13 +21,10 @@
         });
 
         const result = await response.json();
-        console.log(result)
 
         if (result.token) {
-            console.log("success!")
             // Store the JWT in local storage
             localStorage.setItem('token', result.token);
-            console.log("token saved to local storage: ", result.token)
 
             // rerun all `load` functions, following the successful update
             await invalidateAll();
