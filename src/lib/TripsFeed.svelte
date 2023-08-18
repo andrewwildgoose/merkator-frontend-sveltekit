@@ -1,11 +1,17 @@
 <script>
     import { onMount } from 'svelte';
+    import { goto } from '$app/navigation';
     import TripMap from './TripMap.svelte';
-    import { units, deleteRoute } from '../stores';
-    
+    import { units, deleteRoute, userRoutes, userTrips } from '../stores';
+
+
 
     let tripsStore;
     let token;
+    let loading = true; // Added loading indicator
+    let selectedTripForRoutes = null; // Store the selected trip to add routes to
+    let showRoutesOverlay = false; // Control the visibility of the routes overlay
+    let selectedRouteIDs = []; // Store for the route's selected to be added to a trip
 
     onMount(async () => {
         token = localStorage.getItem('token');
@@ -18,34 +24,96 @@
         
         const headers = {
             'Authorization': `Bearer ${token}`
-            
         };
 
-        // Fetch user's routes from the backend
-        const response = await fetch('http://localhost:3000/merkator/user/trips', { headers });
-        if (response.ok) {
-            tripsStore= await response.json();
-            
-        } else {
-            // Handle error, e.g., unauthorized
-            console.error('Failed to fetch user details');
+        try {
+            // Fetch user's trips from the backend
+            const response = await fetch('http://localhost:3000/merkator/user/trips', { headers });
+            if (response.ok) {
+                tripsStore = await response.json();
+                userTrips.set(tripsStore);
+            } else {
+                // Handle error, e.g., unauthorized
+                console.error('Failed to fetch user trips');
+            }
+        } finally {
+            loading = false; // Set loading to false once data is fetched
         }
     });
 
-    //TODO: update to deleteTrip()
-    //handle click on the delete route button
-    const handleDelete = (id) => {
+    const openRoutesOverlay = (trip) => {
+        selectedTripForRoutes = trip;
+        showRoutesOverlay = true;
+    };
+
+    const closeRoutesOverlay = () => {
+        selectedTripForRoutes = null;
+        showRoutesOverlay = false;
+    };
+
+    const toggleRouteSelection = (routeID) => {
+        if (selectedRouteIDs.includes(routeID)) {
+            selectedRouteIDs = selectedRouteIDs.filter(id => id !== routeID);
+        } else {
+            selectedRouteIDs = [...selectedRouteIDs, routeID];
+        }
+    };
+
+    const handleAddRoutes = async () => {
+        if (!selectedTripForRoutes || selectedRouteIDs.length === 0) {
+            // Handle case where no trip or routes are selected
+            return;
+        }
+
+        const token = localStorage.getItem('token'); // Replace with your token retrieval method
+
+        for (const routeID of selectedRouteIDs) {
+            console.log('tripID:', selectedTripForRoutes.idString)
+            console.log('routeID:', routeID)
+            const response = await fetch('http://localhost:3000/merkator/user/trip/add_route', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    tripID: selectedTripForRoutes.idString,
+                    routeID: routeID
+                })
+            });
+
+            if (!response.ok) {
+                // Handle error, such as showing an error message
+                console.error('Failed to add route to trip');
+                return;
+            }
+        }
+
+        // Handle success, such as updating the trips or showing a success message
+        // ...
+
+        // Reset selectedRouteIDs
+        selectedRouteIDs = [];
+        closeRoutesOverlay(); // Close the overlay after adding routes
+    };
+
+    // TODO: update to deleteTrip()
+    // Handle click on the delete trip button
+    const handleDelete = async (id) => {
         if (confirm('Are you sure you want to delete this trip?')) {
-            const response = deleteRoute(id, token);
+            const response = await deleteRoute(id, token);
             console.log(response);
         }
     };
+
 </script>
 
 <div class="tripsListFeed">
     <h1>Trips</h1>
-    
-    {#if tripsStore !== undefined}
+
+    {#if loading}
+        <p>Loading trips . . .</p> <!-- Show loading indicator -->
+    {:else if tripsStore !== undefined && tripsStore.length > 0}
         {#each tripsStore as trip (trip.id)}
             <div class='trip-item'>
                 <div class='map-container'>
@@ -56,20 +124,38 @@
                     <p>
                         Distance: {trip.tripLength} {$units}
                         <br>
-                        Elevation Gain: {trip.tripElevationGain}
+                        Elevation Gain: {trip.tripElevationGain} m
                         <br>
-                        Elevation Loss: {trip.tripElevationLoss}
+                        Elevation Loss: {trip.tripElevationLoss} m
                         <br>
                         {#if trip.tripDescription !== null}{trip.tripDescription}{/if}
                     </p>
+                    <button on:click={() => openRoutesOverlay(trip)}>Add Routes</button>
                     <button on:click={() => handleDelete(trip.id)}>delete trip</button>
                 </div>
             </div>
             <br>
         {/each}
-        {:else}
-            <p>There are no trips to show...</p>
+    {:else}
+        <p>There are no trips to show, add a trip!</p>
     {/if}
+
+    {#if showRoutesOverlay}
+    <!-- Overlay for adding routes to a trip -->
+    <div class="overlay">
+        <div class="overlay-content">
+            <h2>Select Routes to Add to {selectedTripForRoutes.tripName}</h2>
+            {#each $userRoutes as route (route.id)}
+                <label>
+                    <input type="checkbox" on:change={() => toggleRouteSelection(route.idString)} />
+                    {route.routeName}
+                </label>
+            {/each}
+            <button on:click={handleAddRoutes}>Add Selected Routes</button>
+            <button on:click={closeRoutesOverlay}>Cancel</button>
+        </div>
+    </div>
+{/if}
 </div>
 
 <style>

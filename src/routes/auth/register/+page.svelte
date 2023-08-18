@@ -32,7 +32,7 @@
 
             // rerun all `load` functions, following the successful update
             await invalidateAll();
-            goto("/user"); // Redirect to a success page after registration
+            goto("/"); // Redirect to home page after registration
             console.log("redirected")
         } else {
             // Handle registration failure

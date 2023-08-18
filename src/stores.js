@@ -1,6 +1,7 @@
 // stores.js
 import { writable } from 'svelte/store';
 
+// Functionality to change the unites of measurement
 export const units = writable('km');
 
 export const unitsKM = 'km'
@@ -10,6 +11,7 @@ export const setUnits = (newValue) => {
     units.set(newValue);
 }
 
+// Function to delete a route
 export async function deleteRoute(routeId, token) {
     const response = await fetch(`http://localhost:3000/merkator/user/route/${routeId}`, {
         method: 'DELETE',
@@ -26,3 +28,8 @@ export async function deleteRoute(routeId, token) {
         console.error('Failed to delete route');
     }
 }
+
+// Store of the user's routes and trips for quick retrieval
+export const userRoutes = writable([]);
+export const userTrips = writable([]);
+

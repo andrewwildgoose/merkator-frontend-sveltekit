@@ -16,6 +16,7 @@
 	},
 	"dependencies": {
 		"@types/mapbox__mapbox-gl-geocoder": "^4.7.4",
+		"jsonwebtoken": "^9.0.1",
 		"mapbox-gl": "^2.15.0"
 	},
 	"type": "module"

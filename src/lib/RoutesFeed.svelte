@@ -1,10 +1,14 @@
 <script>
     import { onMount } from 'svelte';
+    import { goto } from '$app/navigation';
     import PolyMap from './PolyMap.svelte';
-    import { units, deleteRoute } from '../stores';
+    import { units, deleteRoute, userRoutes } from '../stores';
+    import Card from './card.svelte';
+    import UploadFile from './UploadFile.svelte';
 
     let routesStore;
     let token;
+    let loading = true; // Added loading indicator
 
     onMount(async () => {
         token = localStorage.getItem('token');
@@ -17,24 +21,27 @@
         
         const headers = {
             'Authorization': `Bearer ${token}`
-            
         };
 
-        // Fetch user's routes from the backend
-        const response = await fetch('http://localhost:3000/merkator/user/routes', { headers });
-        if (response.ok) {
-            routesStore = await response.json();
-            
-        } else {
-            // Handle error, e.g., unauthorized
-            console.error('Failed to fetch user details');
+        try {
+            // Fetch user's routes from the backend
+            const response = await fetch('http://localhost:3000/merkator/user/routes', { headers });
+            if (response.ok) {
+                routesStore = await response.json();
+                userRoutes.set(routesStore); // Update the store
+            } else {
+                // Handle error, e.g., unauthorized
+                console.error('Failed to fetch user routes');
+            }
+        } finally {
+            loading = false; // Set loading to false once data is fetched
         }
     });
 
     //handle click on the delete route button
-    const handleDelete = (id) => {
+    const handleDelete = async (id) => {
         if (confirm('Are you sure you want to delete this route?')) {
-            const response = deleteRoute(id, token);
+            const response = await deleteRoute(id, token);
             console.log(response);
         }
     };
@@ -42,8 +49,13 @@
 
 <div class="routesListFeed">
     <h1>Routes</h1>
+    <Card>
+        <UploadFile />
+    </Card>
     
-    {#if routesStore !== undefined}
+    {#if loading}
+        <p>Loading routes . . .</p> <!-- Show loading indicator -->
+    {:else if routesStore !== undefined && routesStore.length > 0}
         {#each routesStore as route (route.id)}
             <div class='route-item'>
                 <div class='map-container'>
@@ -54,9 +66,9 @@
                     <p>
                         Distance: {route.routeLength} {$units}
                         <br>
-                        Elevation Gain: {route.routeElevationGain}
+                        Elevation Gain: {route.routeElevationGain} m
                         <br>
-                        Elevation Loss: {route.routeElevationLoss}
+                        Elevation Loss: {route.routeElevationLoss} m
                         <br>
                         {#if route.routeDescription !== "Optional.empty"}{route.routeDescription}{/if}
                     </p>
@@ -65,10 +77,11 @@
             </div>
             <br>
         {/each}
-        {:else}
-            <p>There are no routes to show...</p>
+    {:else}
+        <p>There are no routes to show, upload a route!</p> <!-- Show message for no routes -->
     {/if}
 </div>
+
 
 <style>
     .routesListFeed {

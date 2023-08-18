@@ -62,12 +62,9 @@
             const start = tripCoordinates[0];
             const end = tripCoordinates[tripCoordinates.length - 1];
             const distance = Math.sqrt((end[0] - start[0]) ** 2 + (end[1] - start[1]) ** 2);
-            console.log('distance:', distance)
 
             // Calculate an appropriate zoom level based on the distance
             const maxZoom = Math.min(map.getMaxZoom(), Math.max(map.getZoom(), 20 - Math.log2(distance) * 1));
-            console.log('log:', 10 - Math.log2(distance) * 1)
-            console.log('maxZoom:', maxZoom);
 
             map.fitBounds(bounds, {
                 padding: 20,
