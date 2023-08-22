@@ -6,8 +6,6 @@
     import NavBar from "../lib/navBar.svelte";
     import RoutesFeed from "../lib/RoutesFeed.svelte";
     import TripsFeed from "../lib/TripsFeed.svelte";
-    import { userRoutes, userTrips } from '../stores';
-    import AddRouteToTrip from '../lib/AddRouteToTrip.svelte';
 
     let userDetails = null; // Store fetched user details
 
@@ -46,11 +44,11 @@
 <div class="home">
     {#if userDetails}
     <div>
-        <h1>Welcome, {userDetails.name}!</h1>
+        <p>Welcome, {userDetails.name}!</p>
     </div>
     {:else}
     <div>
-        <h1>User details not found</h1>
+        <p>User details not found</p>
 
     </div>
     {/if}
@@ -60,23 +58,18 @@
 </div>
 
 <div class="homeFeed">
+    <div class="feedContainer">
+        <div class="routeFeed">
+            <Card>
+                <RoutesFeed />
+            </Card>
+        </div>
 
-    <div class="routeFeed">
-        <Card>
-            <RoutesFeed />
-        </Card>
-    </div>
-
-    <div class="tripFeed">
-        <Card>
-            <TripsFeed />
-        </Card>
-    </div>
-
-    <div class="tripFeed">
-        <Card>
-            <AddRouteToTrip {userRoutes} {userTrips}/>
-        </Card>
+        <div class="tripFeed">
+            <Card>
+                <TripsFeed />
+            </Card>
+        </div>
     </div>
 </div>
 
@@ -89,7 +82,23 @@
         margin: 20px auto;
     }
     .homeFeed {
-        text-align: center;
-        
+        height: 70vh;
+        display: flex;
+        justify-content: space-between;
+        overflow: hidden; /* Hide overflow to prevent scrollbars at the container level */
+    }
+
+    .feedContainer {
+        display: flex;
+        gap: 20px; /* Adjust the gap as needed */
+        overflow-x: auto; /* Enable horizontal scrolling */
+        flex: 1; /* Allow the container to grow and take up available space */
+    }
+
+    .routeFeed,
+    .tripFeed {
+        flex: 1; /* Allow the feeds to take up equal available space */
+        max-width: 45%; /* Adjust the width as needed */
+        overflow-y: auto; /* Enable vertical scrolling for each feed */
     }
 </style>

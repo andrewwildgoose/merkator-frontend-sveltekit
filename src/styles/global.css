@@ -49,6 +49,7 @@ button {
 	background-color: rgba(38, 214, 150, 0.1);
 	outline-color: #26D696;
 	outline-width: 10px;
+	padding: 5px;
 }
 
 button:disabled {
@@ -83,4 +84,10 @@ p {
 	color: #ffffff;
 	font-family: 'Helvetica', sans-serif;
 	font-size: 1em;
+}
+.small-map-box {
+	box-sizing: border-box;
+	position: relative;
+	width: 150px;
+	height: 150px;
 }

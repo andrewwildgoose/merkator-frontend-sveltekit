@@ -95,14 +95,14 @@
 <style>
     .map-box {
         box-sizing: border-box;
-        position: absolute;
+        position: relative;
         width: 150px;
         height: 150px;
     }
 
     .map { 
         box-sizing: border-box;
-        position: absolute; 
+        position: relative; 
         width: 100%;
         height: 100%;
     }

@@ -14,7 +14,7 @@
         map = new mapboxgl.Map({
             container: mapContainer,
             style: `mapbox://styles/merkator1/cllax8yio00sf01pdfsrn1gmo`,
-            zoom: 9
+            zoom: 9 
         });
 
         // Parse JSON route data and create a GeoJSON feature for the polyline
@@ -33,6 +33,8 @@
 
         // Add the GeoJSON polyline layer to the map
         map.on('load', () => {
+
+            map.flyTo({animate:false, essential: false})
 
             map.addSource('route', {
                 type: 'geojson',
@@ -72,7 +74,7 @@
 <main>
     <div>
         <div class="map-box">
-            <div class="map" bind:this={mapContainer} />
+            <div class="map" bind:this={mapContainer}/>
         </div>
     </div>
 </main>
@@ -80,14 +82,14 @@
 <style>
     .map-box {
         box-sizing: border-box;
-        position: absolute;
+        position: relative;
         width: 150px;
         height: 150px;
     }
     
     .map { 
         box-sizing: border-box;
-        position: absolute; 
+        position: relative; 
         width: 100%;
         height: 100%;
     }

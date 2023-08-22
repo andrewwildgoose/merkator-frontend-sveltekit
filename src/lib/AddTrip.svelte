@@ -10,20 +10,14 @@
         showModal = false;
     };
     
-    let selectedFiles = [];
-    let routeName = '';
+    let tripName = '';
     let errorMessage = '';
 
     const handleSubmit = async (event) => {
         event.preventDefault();
 
-        if (!selectedFiles) {
-            errorMessage = 'Please select a file';
-            return;
-        }
-
-        if (routeName.trim() === '') {
-            errorMessage = 'Please enter a route name';
+        if (tripName.trim() === '') {
+            errorMessage = 'Please enter a trip name';
             return;
         }
 
@@ -33,10 +27,9 @@
             return;
         }
 
-        const formData = new FormData();
-        formData.append('fileName', routeName);
-        formData.append('file', selectedFiles[0]);
-        console.log(formData);
+        // const formData = new FormData();
+        // formData.append('tripName', tripName);
+        // console.log(formData);
         
 
         const headers = {
@@ -44,31 +37,31 @@
         };
 
         try {
-            const response = await fetch("http://localhost:3000/merkator/user/new_route", {
+            const response = await fetch("http://localhost:3000/merkator/user/new_trip", {
                 method: "POST",
                 headers,
-                body: formData,
+                body: tripName,
             });
 
             if (response.ok) {
                 // Handle success
                 closeModal();
-                const uploadSuccessEvent = new CustomEvent('upload-success');
-                dispatch(uploadSuccessEvent);
+                const tripSuccessEvent = new CustomEvent('trip-success');
+                dispatch(tripSuccessEvent);
                 
             } else {
                 // Handle error
-                errorMessage = "Error uploading route.";
+                errorMessage = "Error creating trip.";
             }
         } catch (error) {
-        errorMessage = "An error occurred while uploading the route.";
+        errorMessage = "An error occurred while creating the trip.";
         }
         };
 </script>
 
 
 <main>
-    <button on:click={openModal}>Upload Route</button>
+    <button on:click={openModal}>Create trip</button>
         {#if showModal}
         <div class="modal">
             <div class="modal-content">
@@ -77,14 +70,10 @@
                 <h2>Upload Route</h2>
                 <form on:submit={handleSubmit}>
                     <label>
-                        Upload Route GPX File:
-                        <input type="file" accept=".gpx" bind:files={selectedFiles} />
+                        Trip Name:
+                        <input type="text" bind:value={tripName} />
                     </label>
-                    <label>
-                        Route Name:
-                        <input type="text" bind:value={routeName} />
-                    </label>
-                <button type="submit">Upload</button>
+                <button type="submit">Create</button>
                 <button on:click={closeModal}>Cancel</button>
                 {#if errorMessage}
                     <p class="error">{errorMessage}</p>

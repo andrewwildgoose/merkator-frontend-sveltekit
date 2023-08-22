@@ -5,9 +5,9 @@
 <style>
     .card{
         background: rgba(0, 0, 0, 0.1);
-        padding: 20px;
-        border-radius: 5px;
+        padding: 10px;
+        border-radius: 2px;
         box-shadow: 2px 4px 6px rgba(38, 214, 150, 0.1);
-        margin: 20px;
+        margin: 10px;
     }
 </style>

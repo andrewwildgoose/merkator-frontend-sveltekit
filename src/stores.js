@@ -28,6 +28,23 @@ export async function deleteRoute(routeId, token) {
         console.error('Failed to delete route');
     }
 }
+// Function to delete a trip
+export async function deleteTrip(tripId, token) {
+    const response = await fetch(`http://localhost:3000/merkator/user/trip/${tripId}`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    if (response.ok) {
+        return {
+            success: true,
+        };
+    } else {
+        console.error('Failed to delete trip');
+    }
+}
 
 // Store of the user's routes and trips for quick retrieval
 export const userRoutes = writable([]);

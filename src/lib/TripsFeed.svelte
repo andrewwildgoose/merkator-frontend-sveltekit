@@ -2,8 +2,10 @@
     import { onMount } from 'svelte';
     import { goto } from '$app/navigation';
     import TripMap from './TripMap.svelte';
-    import { units, deleteRoute, userRoutes, userTrips } from '../stores';
-
+    import { units, deleteTrip, userRoutes, userTrips } from '../stores';
+    import AddTrip from './AddTrip.svelte';
+    import Card from './card.svelte';
+    import StaticMap from './StaticMap.svelte';
 
 
     let tripsStore;
@@ -26,6 +28,10 @@
             'Authorization': `Bearer ${token}`
         };
 
+        fetchUserTrips(headers);
+    });
+
+    const fetchUserTrips = async (headers) => {
         try {
             // Fetch user's trips from the backend
             const response = await fetch('http://localhost:3000/merkator/user/trips', { headers });
@@ -39,7 +45,7 @@
         } finally {
             loading = false; // Set loading to false once data is fetched
         }
-    });
+    }
 
     const openRoutesOverlay = (trip) => {
         selectedTripForRoutes = trip;
@@ -97,27 +103,39 @@
         closeRoutesOverlay(); // Close the overlay after adding routes
     };
 
-    // TODO: update to deleteTrip()
+    const handleSuccess = () => {
+        fetchUserTrips(headers);
+    }
+
     // Handle click on the delete trip button
     const handleDelete = async (id) => {
         if (confirm('Are you sure you want to delete this trip?')) {
-            const response = await deleteRoute(id, token);
+            const response = await deleteTrip(id, token);
             console.log(response);
+            if (response.ok) {
+                handleSuccess()
+            }
         }
     };
+
+
 
 </script>
 
 <div class="tripsListFeed">
     <h1>Trips</h1>
+    <Card>
+        <AddTrip on:trip-success={handleSuccess}/>
+    </Card>
 
     {#if loading}
         <p>Loading trips . . .</p> <!-- Show loading indicator -->
     {:else if tripsStore !== undefined && tripsStore.length > 0}
         {#each tripsStore as trip (trip.id)}
             <div class='trip-item'>
+                {#if trip.tripStaticMapUrl}
                 <div class='map-container'>
-                    <TripMap tripGpxStrings={trip.tripGpxStrings}/>
+                    <StaticMap mapUrl={trip.tripStaticMapUrl}/>
                 </div>
                 <div class='trip-details'>
                     <h4>{trip.tripName}</h4>
@@ -131,8 +149,19 @@
                         {#if trip.tripDescription !== null}{trip.tripDescription}{/if}
                     </p>
                     <button on:click={() => openRoutesOverlay(trip)}>Add Routes</button>
-                    <button on:click={() => handleDelete(trip.id)}>delete trip</button>
+                    <button on:click={() => handleDelete(trip.idString)}>Delete trip</button>
+                    <!-- <button on:click={() => handleCompletion(trip.idString)}>Complete trip</button> -->
                 </div>
+                {:else}
+                <div class='trip-details'>
+                    <h4>{trip.tripName}</h4>
+                    <p>This trip doesn't have any routes yet.</p> 
+                    <button on:click={() => openRoutesOverlay(trip)}>Add Routes</button>
+                    <button on:click={() => handleDelete(trip.idString)}>Delete trip</button>
+                </div>
+                
+                {/if}
+                
             </div>
             <br>
         {/each}
@@ -169,10 +198,10 @@
         grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
         gap: 10px;
         background: rgba(0, 0, 0, 0.1);
-        padding: 20px;
-        border-radius: 5px;
+        padding: 10px;
+        border-radius: 2px;
         box-shadow: 2px 4px 6px rgba(38, 214, 149, 0.192);
-        margin: 20px;
+        margin: 10px;
     }
 
     .map-container {
