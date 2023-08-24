@@ -79,9 +79,9 @@
                     <p>
                         Distance: {route.routeLength} {$units}
                         <br>
-                        Elevation Gain: {route.routeElevationGain} m
+                        Elevation gain: {route.routeElevationGain} m
                         <br>
-                        Elevation Loss: {route.routeElevationLoss} m
+                        Elevation loss: {route.routeElevationLoss} m
                         <br>
                         {#if route.routeDescription !== "Optional.empty"}{route.routeDescription}{/if}
                     </p>

@@ -70,6 +70,11 @@ h1 {
 	font-family: 'Helvetica', sans-serif;
 	font-size: 1.5em;
 }
+h2 {
+	color: #26D696;
+	font-family: 'Helvetica', sans-serif;
+	font-size: 1em;
+}
 h3 {
 	color: #ffffff;
 	font-family: 'Helvetica', sans-serif;
@@ -90,4 +95,48 @@ p {
 	position: relative;
 	width: 150px;
 	height: 150px;
+}
+
+/* File input styles */
+input[type="file"] {
+    display: none;
+}
+
+.file-upload-input {
+	display: none;
+}
+
+.file-upload-label {
+	display: inline-block;
+	width: 100%;
+	padding: 8px 16px;
+	background-color: rgba(38, 214, 150, 0.1);
+	color: #ffffff;
+	border: 1px solid rgba(38, 214, 150, 0.1);
+	border-radius: 2px;
+	cursor: pointer;
+	transition: background-color 0.3s, border-color 0.3s;
+}
+
+.file-upload-label:hover {
+	background-color: rgba(38, 214, 150, 0.2);
+	border-color: rgba(38, 214, 150, 0.2);
+}
+
+
+.file-name {
+	display: inline-block;
+	width: auto;
+	overflow: hidden;
+	white-space: nowrap;
+	text-overflow: ellipsis;
+	margin-left: 8px;
+}
+
+.file-upload-button {
+    color: #fff;
+    background-color: #26D696;
+    padding: 4px 8px;
+    border-radius: 4px;
+    cursor: pointer;
 }

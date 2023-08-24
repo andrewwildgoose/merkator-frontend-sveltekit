@@ -1,11 +1,12 @@
 <script>
     import { onMount } from 'svelte';
     import { goto } from '$app/navigation';
-    import TripMap from './TripMap.svelte';
     import { units, deleteTrip, userRoutes, userTrips } from '../stores';
     import AddTrip from './AddTrip.svelte';
     import Card from './card.svelte';
     import StaticMap from './StaticMap.svelte';
+    import Modal from './Modal.svelte';
+    import CompleteTrip from './CompleteTrip.svelte';
 
 
     let tripsStore;
@@ -14,6 +15,7 @@
     let selectedTripForRoutes = null; // Store the selected trip to add routes to
     let showRoutesOverlay = false; // Control the visibility of the routes overlay
     let selectedRouteIDs = []; // Store for the route's selected to be added to a trip
+    let selectedModalProps; // Props to pass modal component
 
     onMount(async () => {
         token = localStorage.getItem('token');
@@ -71,11 +73,9 @@
             return;
         }
 
-        const token = localStorage.getItem('token'); // Replace with your token retrieval method
+        const token = localStorage.getItem('token'); 
 
         for (const routeID of selectedRouteIDs) {
-            console.log('tripID:', selectedTripForRoutes.idString)
-            console.log('routeID:', routeID)
             const response = await fetch('http://localhost:3000/merkator/user/trip/add_route', {
                 method: 'POST',
                 headers: {
@@ -117,7 +117,22 @@
             }
         }
     };
+    
+    // Handle click on complete trip button
+    const handleCompletion = async(tripId) => {
+        showModal(CompleteTrip, tripId) 
+    }
 
+    let selectedModalComponent = null;
+    
+    const showModal = (component, tripId) => {
+        selectedModalComponent = component;
+        selectedModalProps = { tripId };
+    };
+    
+    const closeModal = () => {
+        selectedModalComponent = null;
+    };
 
 
 </script>
@@ -142,15 +157,16 @@
                     <p>
                         Distance: {trip.tripLength} {$units}
                         <br>
-                        Elevation Gain: {trip.tripElevationGain} m
+                        Elevation gain: {trip.tripElevationGain} m
                         <br>
-                        Elevation Loss: {trip.tripElevationLoss} m
+                        Elevation loss: {trip.tripElevationLoss} m
                         <br>
+                        No. of routes: {trip.routeCount} 
                         {#if trip.tripDescription !== null}{trip.tripDescription}{/if}
                     </p>
                     <button on:click={() => openRoutesOverlay(trip)}>Add Routes</button>
                     <button on:click={() => handleDelete(trip.idString)}>Delete trip</button>
-                    <!-- <button on:click={() => handleCompletion(trip.idString)}>Complete trip</button> -->
+                    <button on:click={() => handleCompletion(trip.idString)}>Complete trip</button>
                 </div>
                 {:else}
                 <div class='trip-details'>
@@ -160,6 +176,11 @@
                     <button on:click={() => handleDelete(trip.idString)}>Delete trip</button>
                 </div>
                 
+                {/if}
+                {#if selectedModalComponent}
+                    <Modal on:close={closeModal}>
+                        <svelte:component this={selectedModalComponent} {...selectedModalProps} />
+                    </Modal>
                 {/if}
                 
             </div>
