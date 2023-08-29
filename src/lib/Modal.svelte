@@ -4,7 +4,13 @@
     import { createEventDispatcher } from 'svelte';
     const dispatch = createEventDispatcher();
 
+    function handleSuccess() {
+        console.log("Modal: success event dispatched")
+        dispatch('add-success');
+    }
+
     function closeModal() {
+        console.log("Modal: Closing modal");
         dispatch('close');
     }
     function handleKeyUp(event) {
@@ -14,7 +20,7 @@
     }
 </script>
 
-<div class='modal' on:click|self={closeModal} on:keydown={handleKeyUp}>
+<div class='modal' on:click|self={closeModal} on:keydown={handleKeyUp} on:add-success={handleSuccess} on:close={closeModal} on:upload-success{handleSuccess}>
     <div class='content'>
         <Card>
             <slot></slot>  

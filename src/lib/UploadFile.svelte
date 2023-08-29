@@ -1,14 +1,7 @@
 <script>
 
-    let showModal = false;
-
-    const openModal = () => {
-        showModal = true;
-    };
-
-    const closeModal = () => {
-        showModal = false;
-    };
+    import { createEventDispatcher } from 'svelte';
+    const dispatch = createEventDispatcher();
     
     let selectedFiles = [];
     let routeName = '';
@@ -16,6 +9,8 @@
 
     const handleSubmit = async (event) => {
         event.preventDefault();
+
+        errorMessage = '';
 
         if (!selectedFiles) {
             errorMessage = 'Please select a file';
@@ -51,10 +46,12 @@
             });
 
             if (response.ok) {
+                console.log("Success!!!!")
                 // Handle success
-                closeModal();
-                const uploadSuccessEvent = new CustomEvent('upload-success');
-                dispatch(uploadSuccessEvent);
+                dispatch('add-success');
+                console.log("UF: Upload success event dispatched");
+                //dispatch('close');
+                //console.log("UF: Close event dispatched");
                 
             } else {
                 // Handle error
@@ -63,39 +60,43 @@
         } catch (error) {
         errorMessage = "An error occurred while uploading the route.";
         }
-        };
+    };
 </script>
 
 
-<main>
-    <button on:click={openModal}>Upload Route</button>
-        {#if showModal}
-        <div class="modal">
-            <div class="modal-content">
-            <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <span class="close" on:click={closeModal}>&times;</span>
-                <h2>Upload Route</h2>
-                <form on:submit={handleSubmit}>
-                    <label>
-                        Upload Route GPX File:
-                        <input type="file" accept=".gpx" bind:files={selectedFiles} />
-                    </label>
-                    <label>
-                        Route Name:
-                        <input type="text" bind:value={routeName} />
-                    </label>
-                <button type="submit">Upload</button>
-                <button on:click={closeModal}>Cancel</button>
-                {#if errorMessage}
-                    <p class="error">{errorMessage}</p>
-                {/if}
-                </form>
-            </div>
-        </div>
-        {/if}
-</main>
+
+<div class="route-upload">
+    <h2>Upload Route</h2>
+    <form on:submit={handleSubmit}>
+        <label class="file-upload-label">
+            <input type="file" accept=".gpx" bind:files={selectedFiles} />
+            {#if selectedFiles[0]}
+            <span class="file-name">{selectedFiles[0].name}</span>
+                {:else}Select route GPX file
+            {/if}
+        </label>
+        <label>
+            <p>Route name:</p>
+            <input type="text" bind:value={routeName} />
+        </label>
+    <button type="submit">Upload</button>
+    {#if errorMessage}
+        <p class="error">{errorMessage}</p>
+    {/if}
+    </form>
+</div>       
+
+        
+
 
 <style>
+    .route-upload {
+        display: flex;
+        padding: 10px;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 10px;
+    }
     .error {
         color: red;
     }

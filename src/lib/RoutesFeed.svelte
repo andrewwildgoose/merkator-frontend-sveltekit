@@ -5,10 +5,12 @@
     import Card from './card.svelte';
     import UploadFile from './UploadFile.svelte';
     import StaticMap from './StaticMap.svelte';
+    import Modal from './Modal.svelte';
 
     let routesStore;
     let token;
-    let loading = true; // Added loading indicator
+    let loading = true;
+    let isUploadModalOpen = false;
 
     onMount(async () => {
         token = localStorage.getItem('token');
@@ -28,12 +30,14 @@
     });
 
     const fetchUserRoutes = async (headers) => {
+        console.log("Fetching User Routes");
         try {
             // Fetch user's routes from the backend
             const response = await fetch('http://localhost:3000/merkator/user/routes', { headers });
             if (response.ok) {
                 routesStore = await response.json();
                 userRoutes.set(routesStore); // Update the store
+                console.log("User routes updated:", routesStore);
             } else {
                 // Handle error, e.g., unauthorized
                 console.error('Failed to fetch user routes');
@@ -43,8 +47,12 @@
         }
     };
 
-    const handleSuccess = () => {
+    const handleSuccess = (token) => {
         // Fetch user's routes again to refresh the data
+        console.log("User routes updated, handling success");
+        const headers = {
+            'Authorization': `Bearer ${token}`
+        };
         fetchUserRoutes(headers);
     }
 
@@ -54,20 +62,37 @@
             const response = await deleteRoute(id, token);
             console.log(response);
             if (response.ok) {
-                handleSuccess()
+                handleSuccess(token)
             }
         }
     };
+
+    const openUploadModal = () => {
+        console.log("RF: Opening upload modal")
+        isUploadModalOpen = true;
+    };
+
+    const closeUploadModal = () => {
+        console.log("RF: Closing upload modal");
+        isUploadModalOpen = false;
+    };
+
+    const handleUploadSuccess = () => {
+        console.log("RF: Handling upload success");
+        closeUploadModal();
+        handleSuccess(token);
+    };
+    
 </script>
 
 <div class="routesListFeed">
     <h1>Routes</h1>
     <Card>
-        <UploadFile on:upload-success={handleSuccess}/>
+        <button on:click={openUploadModal}>Upload Route</button>
     </Card>
     
     {#if loading}
-        <p>Loading routes . . .</p> <!-- Show loading indicator -->
+        <p>Loading routes . . .</p>
     {:else if routesStore !== undefined && routesStore.length > 0}
         {#each routesStore as route (route.id)}
             <div class='route-item'>
@@ -91,7 +116,15 @@
             <br>
         {/each}
     {:else}
-        <p>There are no routes to show, upload a route!</p> <!-- Show message for no routes -->
+        <p>There are no routes to show, upload a route!</p>
+    {/if}
+    {#if isUploadModalOpen}
+        <Modal on:close={closeUploadModal}>
+            <UploadFile on:add-success={() => {
+                console.log("RF: Handling upload success");
+                handleUploadSuccess();
+            }}/>
+        </Modal>
     {/if}
 </div>
 

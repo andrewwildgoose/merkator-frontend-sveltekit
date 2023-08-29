@@ -16,6 +16,8 @@
     let showRoutesOverlay = false; // Control the visibility of the routes overlay
     let selectedRouteIDs = []; // Store for the route's selected to be added to a trip
     let selectedModalProps; // Props to pass modal component
+    let selectedModalComponent = null;
+    let isCreateModalOpen = false;
 
     onMount(async () => {
         token = localStorage.getItem('token');
@@ -117,13 +119,17 @@
             }
         }
     };
+
+    const openCreateModal = () => {
+        console.log("TF: Opening Create modal")
+        selectedModalComponent = AddTrip;
+        isCreateModalOpen = true;
+    }
     
     // Handle click on complete trip button
     const handleCompletion = async(tripId) => {
         showModal(CompleteTrip, tripId) 
     }
-
-    let selectedModalComponent = null;
     
     const showModal = (component, tripId) => {
         selectedModalComponent = component;
@@ -131,7 +137,10 @@
     };
     
     const closeModal = () => {
+        console.log("TF: close modal received")
+        isCreateModalOpen = false;
         selectedModalComponent = null;
+        selectedModalProps = null;
     };
 
 
@@ -140,7 +149,7 @@
 <div class="tripsListFeed">
     <h1>Trips</h1>
     <Card>
-        <AddTrip on:trip-success={handleSuccess}/>
+        <button on:click={openCreateModal}>Create Trip</button>
     </Card>
 
     {#if loading}
@@ -178,7 +187,7 @@
                 
                 {/if}
                 {#if selectedModalComponent}
-                    <Modal on:close={closeModal}>
+                    <Modal on:close={closeModal} on:add-success={closeModal}>
                         <svelte:component this={selectedModalComponent} {...selectedModalProps} />
                     </Modal>
                 {/if}
@@ -205,7 +214,7 @@
             <button on:click={closeRoutesOverlay}>Cancel</button>
         </div>
     </div>
-{/if}
+    {/if}
 </div>
 
 <style>

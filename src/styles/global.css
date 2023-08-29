@@ -35,9 +35,10 @@ input, button, select, textarea {
 	box-sizing: border-box;
 	border: 1px solid rgba(38, 214, 150, 0.1);
 	border-radius: 2px;
-	color: #000000;
-	outline-color: rgba(38, 214, 150, 0.1);
+	color: #ffffff;
+	outline-color: rgba(38, 214, 150, 0.5);
 	outline-width: 1px;
+	background-color: rgba(38, 214, 150, 0.1);
 }
 
 input:disabled {
@@ -107,7 +108,9 @@ input[type="file"] {
 }
 
 .file-upload-label {
-	display: inline-block;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 	width: 100%;
 	padding: 8px 16px;
 	background-color: rgba(38, 214, 150, 0.1);
@@ -116,6 +119,8 @@ input[type="file"] {
 	border-radius: 2px;
 	cursor: pointer;
 	transition: background-color 0.3s, border-color 0.3s;
+	box-sizing: border-box; /* Ensure box sizing includes padding and border */
+	overflow: hidden; /* Hide any overflowing content */
 }
 
 .file-upload-label:hover {
@@ -126,11 +131,11 @@ input[type="file"] {
 
 .file-name {
 	display: inline-block;
-	width: auto;
 	overflow: hidden;
 	white-space: nowrap;
 	text-overflow: ellipsis;
 	margin-left: 8px;
+	flex-grow: 1;
 }
 
 .file-upload-button {

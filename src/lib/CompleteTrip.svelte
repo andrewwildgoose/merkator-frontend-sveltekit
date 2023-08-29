@@ -43,9 +43,11 @@
 
     const handleFileInput = (event, routeIndex) => {
         const file = event.target.files[0];
+        console.log("Event Target File: ", file);
         if (file) {
             routeMapping[routeIndex].selected = true;
             routeMapping[routeIndex].fileName = file.name;
+            routeMapping[routeIndex].file = file;
         }
     };
 
@@ -60,9 +62,12 @@
         formData.append('tripId', tripId);
 
         selectedRoutes.forEach(({ routeId, file }) => {
-            formData.append('routeIds[]', routeId);
-            formData.append('files', file);
+            formData.append('routeId', routeId);
+            formData.append('file', file);
         });
+        console.log("Selected routes array: ", selectedRoutes);
+        console.log("Selected File: ", selectedRoutes.file);
+        console.log("Formdata: ", formData);
 
         const headers = {
             'Authorization': `Bearer ${token}`,
@@ -74,11 +79,13 @@
                 headers,
                 body: formData,
             });
+            console.log("Response: ", response);
 
             if (response.ok) {
                 // Handle success
-                const uploadSuccessEvent = new CustomEvent('upload-success');
-                dispatch(uploadSuccessEvent);
+                // const uploadSuccessEvent = new CustomEvent('upload-success');
+                // dispatch(uploadSuccessEvent);
+                console.log("Upload Successful")
             } else {
                 // Handle error
                 errorMessage = "Error uploading route.";
