@@ -18,6 +18,9 @@
     let selectedModalProps; // Props to pass modal component
     let selectedModalComponent = null;
     let isCreateModalOpen = false;
+    let showOptionsFor = null;
+    let showOptions = false;
+    let isAddRoutesModalOpen = false;
 
     onMount(async () => {
         token = localStorage.getItem('token');
@@ -49,6 +52,13 @@
         } finally {
             loading = false; // Set loading to false once data is fetched
         }
+    }
+
+    
+
+    function toggleOptions(tripId) {
+        showOptionsFor = tripId;
+        showOptions = !showOptions;
     }
 
     const openRoutesOverlay = (trip) => {
@@ -147,9 +157,12 @@
 </script>
 
 <div class="tripsListFeed">
-    <h1>Trips</h1>
+    
     <Card>
-        <button on:click={openCreateModal}>Create Trip</button>
+        <div class="card-content">
+            <h2 class="card-title">Trips</h2>
+            <button on:click={openCreateModal}>Create Trip</button>
+        </div>
     </Card>
 
     {#if loading}
@@ -173,9 +186,15 @@
                         No. of routes: {trip.routeCount} 
                         {#if trip.tripDescription !== null}{trip.tripDescription}{/if}
                     </p>
-                    <button on:click={() => openRoutesOverlay(trip)}>Add Routes</button>
-                    <button on:click={() => handleDelete(trip.idString)}>Delete trip</button>
-                    <button on:click={() => handleCompletion(trip.idString)}>Complete trip</button>
+                    <!-- svelte-ignore a11y-click-events-have-key-events -->
+                    <button class="options-button" on:click={() => toggleOptions(trip.idString)}>
+                        Options
+                    </button>
+                    <div class="options {showOptionsFor === trip.idString && showOptions && 'visible'}">
+                        <button on:click={() => openRoutesOverlay(trip)}>Add Routes</button>
+                        <button on:click={() => handleDelete(trip.idString)}>Delete trip</button>
+                        <button on:click={() => handleCompletion(trip.idString)}>Complete trip</button>
+                    </div>
                 </div>
                 {:else}
                 <div class='trip-details'>
@@ -218,6 +237,18 @@
 </div>
 
 <style>
+
+    .card-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+    }
+
+    .card-title {
+        margin: 0;
+    }
+    
     .tripsListFeed {
         
         gap: 20px;
@@ -232,6 +263,35 @@
         border-radius: 2px;
         box-shadow: 2px 4px 6px rgba(38, 214, 149, 0.192);
         margin: 10px;
+    }
+
+    .options {
+        display: none;
+        margin-top: 5px;
+    }
+
+    .options-button {
+        cursor: pointer;
+        color: #26D696;
+        margin-top: 5px;
+    }
+
+    .options.visible {
+        display: block;
+    }
+
+    .trip-item .trip-details {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .trip-item button {
+        width: 100%; /* Make the buttons stretch the width */
+        padding: 8px;
+        margin-top: 5px;
+        border: none;
+        border-radius: 2px;
+        cursor: pointer;
     }
 
     .map-container {
