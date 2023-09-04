@@ -82,12 +82,11 @@
             console.log("Response: ", response);
 
             if (response.ok) {
-                // Handle success
-                // const uploadSuccessEvent = new CustomEvent('upload-success');
-                // dispatch(uploadSuccessEvent);
+                const responseData = await response.json();
+                const completedTripId = responseData.completedTripId;
+                goto(`/completed_trip/${completedTripId}`)
                 console.log("Upload Successful")
             } else {
-                // Handle error
                 errorMessage = "Error uploading route.";
             }
         } catch (error) {
@@ -134,7 +133,7 @@
     }
     .button-container {
         display: flex;
-        justify-content: center; /* Align items to the right */
+        justify-content: center;
         margin-top: 10px;
     }
 </style>

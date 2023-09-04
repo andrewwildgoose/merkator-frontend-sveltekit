@@ -54,7 +54,7 @@
 
 <div class="modal">
     <div class="modal-content">
-        <h2>Upload Route</h2>
+        <h2>Upload Trip</h2>
         <form on:submit={handleSubmit}>
             <label>
                 Trip Name:

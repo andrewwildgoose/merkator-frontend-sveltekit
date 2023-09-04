@@ -1,7 +1,6 @@
 <script>
     import { onMount } from 'svelte';
     import { goto } from '$app/navigation';
-    import NavBar from "../../lib/navBar.svelte";
 
     let userDetails = null; // Store fetched user details
 
@@ -28,10 +27,6 @@
         }
     });
 </script>
-
-<div>
-    <NavBar />
-</div>
 
 {#if userDetails}
     <div>

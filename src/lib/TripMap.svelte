@@ -4,6 +4,7 @@
     import "../../node_modules/mapbox-gl/dist/mapbox-gl.css";
 
     export let tripGpxStrings = [];
+    export let tripRouteColours = [];
     let tripCoordinates = []; // Initialize an array to store all coordinates
     let mapContainer;
     let map;
@@ -39,12 +40,16 @@
                     data: geojson
                 });
 
+                let rgbValues = tripRouteColours[i];
+                const lineColor = `rgb(${rgbValues[0]}, ${rgbValues[1]}, ${rgbValues[2]})`;
+
                 map.addLayer({
                     id: `route-${i}`,
                     type: 'line',
                     source: `route-${i}`,
                     paint: {
-                        'line-color': getRandomColor(),
+                        'line-color': lineColor,
+                        'line-opacity': 0.6,
                         'line-width': 4
                     }
                 });
@@ -73,6 +78,7 @@
         });
     });
 
+    // marked for deletion
     // generate a random hex value for colour
     function getRandomColor() {
         const letters = '0123456789ABCDEF';
@@ -96,10 +102,10 @@
     .map-box {
         box-sizing: border-box;
         position: relative;
-        width: 150px;
-        height: 150px;
+        width: 800px;
+        height: 300px;
     }
-
+    
     .map { 
         box-sizing: border-box;
         position: relative; 

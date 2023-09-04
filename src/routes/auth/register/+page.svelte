@@ -42,10 +42,6 @@
     }
 </script>
 
-<div>
-    <NavBar />
-</div>
-
 <div class="register">
     <form method="POST" on:submit|preventDefault={handleSubmit}>
         <label>
@@ -65,9 +61,49 @@
 </div>
 
 <style>
-    .register {
-        text-align: center;
+    .register  {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto;
+        padding: 20px;
+        background: rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .register  form {
+        width: 100%;
+    }
+
+    .register  label {
         display: block;
-        margin: 20px auto;
+        margin-bottom: 10px;
+        font-weight: bold;
+    }
+
+    .register  input {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        border: 1px solid rgba(38, 214, 150, 0.2);
+        border-radius: 3px;
+    }
+
+    .register  button {
+        border: none;
+        padding: 10px 15px;
+        border-radius: 3px;
+        cursor: pointer;
+        display: block;
+        margin: 0 auto;
+        border: 1px solid rgba(38, 214, 150, 0.2);
+    }
+    .register  button:hover {
+        background-color: rgba(38, 214, 150, 0.2);
+	    border-color: rgba(38, 214, 150, 0.2);
     }
 </style>

@@ -2,8 +2,6 @@
     import { invalidateAll, goto } from '$app/navigation';
     import { applyAction} from '$app/forms';
 
-    import NavBar from "../../../lib/navBar.svelte";
-
     async function handleSubmit(event) {
         event.preventDefault();
 
@@ -38,10 +36,6 @@
     }
 </script>
 
-<div>
-    <NavBar />
-</div>
-
 <div class="login">
     <form method="POST" on:submit|preventDefault={handleSubmit}>
         <label>
@@ -57,9 +51,49 @@
 </div>
 
 <style>
-        .login {
-        text-align: center;
+    .login {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto;
+        padding: 20px;
+        background: rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .login form {
+        width: 100%;
+    }
+
+    .login label {
         display: block;
-        margin: 20px auto;
+        margin-bottom: 10px;
+        font-weight: bold;
+    }
+
+    .login input {
+        width: 100%;
+        padding: 8px;
+        margin-bottom: 10px;
+        border: 1px solid rgba(38, 214, 150, 0.2);
+        border-radius: 3px;
+    }
+
+    .login button {
+        border: none;
+        padding: 10px 15px;
+        border-radius: 3px;
+        cursor: pointer;
+        display: block;
+        margin: 0 auto;
+        border: 1px solid rgba(38, 214, 150, 0.2);
+    }
+    .login button:hover {
+        background-color: rgba(38, 214, 150, 0.2);
+	    border-color: rgba(38, 214, 150, 0.2);
     }
 </style>

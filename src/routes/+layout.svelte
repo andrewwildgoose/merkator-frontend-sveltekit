@@ -1,10 +1,13 @@
 <script>
-    import Title from '$lib/title.svelte'
-    import '../styles/global.css'
+    import NavBar from '../lib/NavBar.svelte';
+    import '../styles/global.css';
+
+    
 </script>
 
 <header>
-    <Title />
+    <NavBar />
+    
 </header>
 <main>
     <slot></slot>
@@ -14,13 +17,11 @@
 </footer>
 
 <style>
-    header {
-        display: flex;
-        justify-content: center;
-    }
     main {
         max-width: 960px;
         margin: 20px auto;
+        display: flex;
+        justify-content: center;
     }
     footer {
         text-align: center;

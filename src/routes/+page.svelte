@@ -3,7 +3,6 @@
     import { onMount } from 'svelte';
     import { goto } from '$app/navigation';
     import Card from "../lib/card.svelte";
-    import NavBar from "../lib/navBar.svelte";
     import RoutesFeed from "../lib/RoutesFeed.svelte";
     import TripsFeed from "../lib/TripsFeed.svelte";
 
@@ -41,22 +40,6 @@
 
 </script>
 
-<div class="home">
-    {#if userDetails}
-    <div>
-        <p>Welcome, {userDetails.name}!</p>
-    </div>
-    {:else}
-    <div>
-        <p>User details not found</p>
-
-    </div>
-    {/if}
-    
-    <NavBar />
-    
-</div>
-
 <div class="homeFeed">
     <div class="feedContainer">
         <div class="routeFeed">
@@ -76,29 +59,26 @@
 
 
 <style>
-    .home {
-        text-align: center;
-        display: block;
-        margin: 20px auto;
-    }
     .homeFeed {
         height: 70vh;
+        width: auto;
         display: flex;
         justify-content: space-between;
-        overflow: hidden; /* Hide overflow to prevent scrollbars at the container level */
+        overflow: hidden;
     }
 
     .feedContainer {
         display: flex;
-        gap: 20px; /* Adjust the gap as needed */
-        overflow-x: auto; /* Enable horizontal scrolling */
-        flex: 1; /* Allow the container to grow and take up available space */
+        gap: 20px;
+        min-width: 800px;
+        overflow-x: auto;
+        flex: 1;
     }
 
     .routeFeed,
     .tripFeed {
-        flex: 1; /* Allow the feeds to take up equal available space */
-        max-width: 45%; /* Adjust the width as needed */
-        overflow-y: auto; /* Enable vertical scrolling for each feed */
+        flex: 1;
+        min-width: 400px;
+        overflow-y: auto;
     }
 </style>

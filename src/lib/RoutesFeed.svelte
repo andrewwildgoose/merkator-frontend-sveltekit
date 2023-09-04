@@ -48,6 +48,7 @@
     };
 
     const handleSuccess = (token) => {
+        loading = true;
         // Fetch user's routes again to refresh the data
         console.log("User routes updated, handling success");
         const headers = {
@@ -86,16 +87,19 @@
 </script>
 
 <div class="routesListFeed">
-    <h1>Routes</h1>
     <Card>
-        <button on:click={openUploadModal}>Upload Route</button>
+        <div class="card-content">
+            <h2 class="card-title">Routes</h2>
+            <button on:click={openUploadModal}>Upload Route</button>
+        </div>
     </Card>
     
     {#if loading}
         <p>Loading routes . . .</p>
     {:else if routesStore !== undefined && routesStore.length > 0}
-        {#each routesStore as route (route.id)}
-            <div class='route-item'>
+        {#each routesStore.slice().reverse() as route (route.id)}
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
+            <div class='route-item' on:click={goto(`/route_detail/${route.idString}`)}>
                 <div class='map-container'>
                     <StaticMap mapUrl={route.routeStaticMapUrl}/>
                 </div>
@@ -110,7 +114,8 @@
                         <br>
                         {#if route.routeDescription !== "Optional.empty"}{route.routeDescription}{/if}
                     </p>
-                    <button on:click={() => handleDelete(route.idString)}>Delete route</button>
+                    <button on:click={goto(`/route_detail/${route.idString}`)}>View route</button>
+                    <button on:click={(event) => {event.stopPropagation(); handleDelete(route.idString);}}>Delete route</button>
                 </div>
             </div>
             <br>
@@ -130,30 +135,60 @@
 
 
 <style>
+
+    .card-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+    }
+    .card-title {
+        flex-grow: 1; /* Allow the first item to grow and take up available space */
+        text-align: left; /* Align the first item to the left */
+        margin-right: auto;
+    }
+
+    .card-content button {
+        flex-shrink: 0; /* Prevent the second item from shrinking */
+        text-align: right; /* Align the second item to the right */
+        margin-left: auto; /* Push the first item to the left */
+    }
+
     .routesListFeed {
-        
         gap: 20px;
     }
 
     .route-item {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-        gap: 10px;
-        background: rgba(0, 0, 0, 0.1);
-        padding: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(0, 0, 0, 0.1);
+    padding: 10px;
+    border-radius: 2px;
+    box-shadow: 2px 4px 6px rgba(38, 214, 149, 0.192);
+    margin: 10px;
+    cursor: pointer;
+    }
+
+    .route-item button {
+        width: 100%;
+        padding: 8px;
+        margin-top: 5px;
+        border: none;
         border-radius: 2px;
-        box-shadow: 2px 4px 6px rgba(38, 214, 149, 0.192);
-        margin: 10px;
+        cursor: pointer;
     }
 
     .map-container {
         width: 160px;
-        height: 160px; 
+        height: 160px;
+        overflow: hidden;
     }
 
     .route-details {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
+        flex-grow: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 </style>

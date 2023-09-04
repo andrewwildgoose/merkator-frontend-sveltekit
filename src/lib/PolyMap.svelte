@@ -64,7 +64,7 @@
             }
                 
             map.fitBounds(bounds, {
-                padding: 20
+                padding: 50
             });
 
         });
@@ -83,8 +83,8 @@
     .map-box {
         box-sizing: border-box;
         position: relative;
-        width: 150px;
-        height: 150px;
+        width: 800px;
+        height: 300px;
     }
     
     .map { 
