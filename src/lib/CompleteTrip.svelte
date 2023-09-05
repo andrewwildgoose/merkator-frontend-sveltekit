@@ -1,11 +1,14 @@
 <script>
     import { onMount } from 'svelte';
+    import { goto } from '$app/navigation';
+    import LoadingIcon from './LoadingIcon.svelte';
 
     export let tripId;
     let token;
     let loading = true;
     let routeMapping = []; // Array of route IDs, names, and file information associated with the trip
     let errorMessage;
+    let completingTrip = false;
 
     onMount(() => {
         token = localStorage.getItem('token');
@@ -31,10 +34,8 @@
                     route.selected = false;
                     route.fileName = '';
                 });
-                console.log(routeMapping);
             } else {
                 errorMessage = 'Failed to fetch route mappings';
-                console.error(errorMessage);
             }
         } finally {
             loading = false; // Set loading to false once data is fetched
@@ -43,7 +44,6 @@
 
     const handleFileInput = (event, routeIndex) => {
         const file = event.target.files[0];
-        console.log("Event Target File: ", file);
         if (file) {
             routeMapping[routeIndex].selected = true;
             routeMapping[routeIndex].fileName = file.name;
@@ -52,6 +52,7 @@
     };
 
     const uploadFiles = async () => {
+        completingTrip = true;
         const selectedRoutes = routeMapping.filter(route => route.selected);
 
         if (selectedRoutes.length === 0) {
@@ -65,9 +66,6 @@
             formData.append('routeId', routeId);
             formData.append('file', file);
         });
-        console.log("Selected routes array: ", selectedRoutes);
-        console.log("Selected File: ", selectedRoutes.file);
-        console.log("Formdata: ", formData);
 
         const headers = {
             'Authorization': `Bearer ${token}`,
@@ -79,13 +77,11 @@
                 headers,
                 body: formData,
             });
-            console.log("Response: ", response);
 
             if (response.ok) {
-                const responseData = await response.json();
-                const completedTripId = responseData.completedTripId;
+                const completedTripId = await response.text();
+                completingTrip = false;
                 goto(`/completed_trip/${completedTripId}`)
-                console.log("Upload Successful")
             } else {
                 errorMessage = "Error uploading route.";
             }
@@ -97,7 +93,10 @@
 
 <div>
     {#if loading}
-        <p>Loading trips . . .</p>
+    <div class="loading-container">
+        <LoadingIcon />
+        <p>Loading routes . . .</p>
+    </div>
     {:else if routeMapping !== undefined && routeMapping.length > 0}
         <h2>Select routes to complete</h2>
         <p>Upload completed activity files (.gpx) for the routes you have completed on this trip</p>
@@ -122,6 +121,18 @@
     {:else}
         <p>{$errorMessage}</p>
     {/if}
+    {#if completingTrip}
+    <div class="loading-container">
+        <LoadingIcon />
+        <p2>
+            Congratulations on your progress.
+            <br>
+            Completing routes . . .
+        </p2>
+    </div>
+    {:else if errorMessage}
+        <p>{$errorMessage}</p>
+    {/if}
 </div>
 
 <style>
@@ -131,9 +142,29 @@
         margin-bottom: 10px;
         width: 100%;
     }
+    .file-name {
+        color: #26D696; 
+        background-color: rgba(38, 214, 149, 0.1);
+        padding-left: 5px;
+        padding-right: 5px;
+        border-radius: 2px;
+        overflow: hidden;
+    }
     .button-container {
         display: flex;
         justify-content: center;
         margin-top: 10px;
+    }
+    .loading-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        /* position: fixed; */
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
     }
 </style>

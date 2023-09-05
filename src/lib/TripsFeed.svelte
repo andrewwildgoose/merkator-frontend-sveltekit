@@ -8,13 +8,12 @@
     import Modal from './Modal.svelte';
     import CompleteTrip from './CompleteTrip.svelte';
     import AddRoutesToTrip from './AddRoutesToTrip.svelte';
-    import { stop_propagation } from 'svelte/internal';
+    import LoadingIcon from './LoadingIcon.svelte';
 
 
     let tripsStore;
     let token;
     let loading = true; // Added loading indicator
-    let showRoutesOverlay = false; // Control the visibility of the routes overlay
     let selectedModalProps; // Props to pass modal component
     let selectedModalComponent = null;
     let showOptionsFor = null;
@@ -63,7 +62,6 @@
     const openRoutesOverlay = (selectedTripForRoutes) => {
         selectedModalComponent = AddRoutesToTrip;
         selectedModalProps = selectedTripForRoutes;
-        showRoutesOverlay = true;
         modalOpen = true;
     };
 
@@ -125,43 +123,58 @@
     </Card>
 
     {#if loading}
-        <p>Loading trips . . .</p> <!-- Show loading indicator -->
+        <div class="loading-container">
+            <LoadingIcon />
+            <p>Loading trips . . .</p>
+        </div>
     {:else if tripsStore !== undefined && tripsStore.length > 0}
         {#each tripsStore.slice().reverse() as trip (trip.id)}
             <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <div class='trip-item' on:click={() => trip.tripStaticMapUrl ? goto(`/trip_detail/${trip.idString}`) : openRoutesOverlay(trip)}>
-                {#if trip.tripStaticMapUrl}
-                <div class='map-container'>
-                    <StaticMap mapUrl={trip.tripStaticMapUrl}/>
+            <div class='trip-item' on:click={() => trip.tripRouteNames.length !== 0 ? goto(`/trip_detail/${trip.idString}`) : openRoutesOverlay(trip)}>
+                {#if trip.tripRouteNames.length !== 0}
+                <div class="inner-item">
+                    <div class='map-container'>
+                        <StaticMap mapUrl={trip.tripStaticMapUrl}/>
+                    </div>
+                    <div class='trip-details'>
+                        <h4>{trip.tripName}</h4>
+                        <p>
+                            Distance: <p2>{trip.tripLength} {$units}</p2>
+                            <br>
+                            Elevation gain: <p2>{trip.tripElevationGain} m</p2>
+                            <br>
+                            Elevation loss: <p2>{trip.tripElevationLoss} m</p2>
+                            <br>
+                            No. of routes: <p2>{trip.routeCount} </p2>
+                            <br>
+                            {#if trip.tripDescription !== null}Description: {trip.tripDescription}{/if}
+                        </p>
+                        
+                    </div>
+                    
                 </div>
-                <div class='trip-details'>
-                    <h4>{trip.tripName}</h4>
-                    <p>
-                        Distance: {trip.tripLength} {$units}
-                        <br>
-                        Elevation gain: {trip.tripElevationGain} m
-                        <br>
-                        Elevation loss: {trip.tripElevationLoss} m
-                        <br>
-                        No. of routes: {trip.routeCount} 
-                        <br>
-                        {#if trip.tripDescription !== null}{trip.tripDescription}{/if}
-                    </p>
+                <div class="button-container">
                     <button on:click={goto(`/trip_detail/${trip.idString}`)}>View trip</button>
                     <button class="options-button" on:click={(event) => {event.stopPropagation(); toggleOptions(trip.idString)}}>
                         Options</button>
                     <div class="options {showOptionsFor === trip.idString && showOptions && 'visible'}">
-                        <button on:click={(event) => {event.stopPropagation(); openRoutesOverlay(trip)}}>Add Routes</button>
+                        <button on:click={(event) => {event.stopPropagation(); openRoutesOverlay(trip)}}>Add routes</button>
+                        <button on:click={(event) => {event.stopPropagation(); handleCompletion(trip.idString)}}>Complete trip</button>
                         <button on:click={(event) => {event.stopPropagation(); handleDelete(trip.idString);}}>Delete trip</button>
                     </div>
                 </div>
                 {:else}
-                <div class='trip-details'>
-                    <h4>{trip.tripName}</h4>
-                    <p>This trip doesn't have any routes yet.</p> 
+                <div class="inner-item">
+                    <div class='trip-details'>
+                        <h4>{trip.tripName}</h4>
+                        <p>This trip doesn't have any routes yet.</p>
+                        
+                    </div>
+                </div>
+                <div class="button-container">
                     <button on:click={() => openRoutesOverlay(trip)}>Add Routes</button>
                     <button on:click={(event) => {event.stopPropagation(); handleDelete(trip.idString);}}>Delete trip</button>
-                </div>
+                </div> 
                 {/if}
             </div>
         {/each}
@@ -177,7 +190,6 @@
 </div>
 
 <style>
-
     .card-content {
         display: flex;
         justify-content: space-between;
@@ -193,25 +205,38 @@
 
     .card-content button {
         flex-shrink: 0;
-        text-align: right;
+        width: 60%;
         margin-left: auto;
     }
     
     .tripsListFeed {
-        
         gap: 20px;
     }
 
     .trip-item {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
         gap: 10px;
         background: rgba(0, 0, 0, 0.1);
-        padding: 10px;
+        padding: 5px;
         border-radius: 2px;
-        box-shadow: 2px 4px 6px rgba(38, 214, 149, 0.192);
-        margin: 10px;
+        box-shadow: 2px 4px 6px rgba(38, 214, 149, 0.1);
+        margin: 5px;
         cursor: pointer;
+    }
+
+    .trip-item:hover {
+        background: rgba(38, 214, 149, 0.1);
+    }
+
+    .inner-item {
+        display: flex;
+        align-items: center;
+        padding: 2px;
+        margin: 5px;
+    }
+
+    .button-container {
+        padding: 2px;
+        margin: 5px;
     }
 
     .options {
@@ -235,7 +260,7 @@
     }
 
     .trip-item button {
-        width: 100%; /* Make the buttons stretch the width */
+        width: 100%;
         padding: 8px;
         margin-top: 5px;
         border: none;
@@ -244,13 +269,17 @@
     }
 
     .map-container {
-        width: 160px;
-        height: 160px; 
+        width: 150px;
+        height: 150px;
+        overflow: hidden;
+        padding-right: 5px;
     }
 
     .trip-details {
-        display: flex;
-        flex-direction: column;
-        justify-content: space-between;
+        flex-grow: 1;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        padding-left: 5px;
     }
 </style>

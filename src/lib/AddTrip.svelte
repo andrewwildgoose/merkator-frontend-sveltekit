@@ -52,14 +52,14 @@
 
 
 
-<div class="modal">
+<div class="trip-create">
+    <h2>Create Trip</h2>
     <div class="modal-content">
-        <h2>Upload Trip</h2>
         <form on:submit={handleSubmit}>
-            <label>
-                Trip Name:
-                <input type="text" bind:value={tripName} />
-            </label>
+        <label>
+            Trip Name:
+            <input type="text" bind:value={tripName} />
+        </label>
         <button type="submit">Create</button>
         {#if errorMessage}
             <p class="error">{errorMessage}</p>
@@ -69,6 +69,16 @@
 </div>
 
 <style>
+    .trip-create {
+        display: flex;
+        padding: 10px;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 10px;
+    }
+    .modal-content {
+        padding: 5px;
+    }
     .error {
         color: red;
     }

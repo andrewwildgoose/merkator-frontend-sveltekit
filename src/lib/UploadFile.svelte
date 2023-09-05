@@ -75,8 +75,8 @@
                 {:else}Select route GPX file
             {/if}
         </label>
-        <label>
-            <p>Route name:</p>
+        <label class="route-name">
+            Route name:
             <input type="text" bind:value={routeName} />
         </label>
     <button type="submit">Upload</button>
@@ -96,6 +96,9 @@
         flex-direction: column;
         align-items: center;
         margin-bottom: 10px;
+    }
+    .route-name {
+        margin-top: 10px;
     }
     .error {
         color: red;

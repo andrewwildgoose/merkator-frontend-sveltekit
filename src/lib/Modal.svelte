@@ -56,11 +56,19 @@
         box-shadow: 2px 4px 6px rgba(38, 214, 150, 0.1);
         margin: 10px;
         max-height: 80vh;
+        max-width: fit-content;
         overflow-y: auto;
     }
     .button-container {
-        display: flex;
-        justify-content: flex-end; /* Align items to the right */
+        align-self: center;
+        text-align: right;
         margin-top: 10px;
+        width: 90%;
+    }
+
+    .button-container button {
+        align-self: right;
+        max-width: fit-content;
+        cursor: pointer;
     }
 </style>

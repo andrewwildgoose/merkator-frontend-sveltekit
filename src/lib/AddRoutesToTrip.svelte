@@ -1,11 +1,18 @@
 <script>
     import { userRoutes } from '../stores';
-
+    import LoadingIcon from './LoadingIcon.svelte';
+    import { createEventDispatcher } from 'svelte';
+    
     let selectedRouteIDs = [];
     export let tripName;
     export let idString;
+    let loading = true;
 
-    import { createEventDispatcher } from 'svelte';
+    $: {
+        if ($userRoutes.length > 0) {
+            loading = false;
+        }
+    }
     const dispatch = createEventDispatcher();
 
     const toggleRouteSelection = (routeId) => {
@@ -20,7 +27,6 @@
     // Handle adding selected routes to the trip
     const handleAddRoutes = async () => {
         console.log("attempting add routes to trip")
-        
         
         if (selectedRouteIDs.length === 0) {
             console.log("No routes selected")
@@ -80,25 +86,53 @@
     };
 </script>
 
-<div class="add-routes-modal">
-    <h2>Add Routes to {tripName}</h2>
-    <p>Select the routes you want to add to the trip:</p>
-    
-    <!-- List of checkboxes for route selection -->
-    <div class="overlay">
-        <div class="overlay-content">
-            {#each $userRoutes as route (route.id)}
-                <label>
-                    <input type="checkbox" on:change={() => toggleRouteSelection(route.idString)} />
-                    {route.routeName}
-                </label>
-            {/each}
-            <button on:click={handleAddRoutes}>Add Selected Routes</button>
+<div>
+    {#if loading}
+        <div class="loading-container">
+            <LoadingIcon />
+            <p>Loading routes . . .</p>
         </div>
-    </div>
+    {:else}
+        
+        <h2>Add Routes to {tripName}</h2>
+        <p>Select the routes you want to add to the trip:</p>
+        <div class="add-routes-modal">
+                <div class="overlay-content">
+                    {#each $userRoutes as route (route.id)}
+                        <button
+                            class:selected-route={selectedRouteIDs.includes(route.idString)}
+                            on:click={() => toggleRouteSelection(route.idString)}
+                        >
+                            {route.routeName}
+                        </button>
+                    {/each}
+                    
+                </div>
+        </div>
+        <button on:click={handleAddRoutes}>Add Selected Routes</button>
+    {/if}
 </div>
+
     
 
 <style>
-    /* Add styles */
+
+    .selected-route {
+        color: #26D696; 
+        font-weight: bold; 
+        background-color: rgba(38, 214, 149, 0.1);
+    }
+
+    .overlay-content {
+        display: grid;
+        align-items: center;
+        margin-bottom: 10px;
+        width: 100%;
+        max-height: 60vh;
+        overflow: hidden;
+        overflow-y: auto;
+        
+    }
+
+
 </style>

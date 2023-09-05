@@ -1,9 +1,11 @@
 <script>
+    import { onMount } from 'svelte';
     import { page } from '$app/stores';
 
     let completedTripId = $page.params.tripId;
     let token;
     let loading = true;
+    let completedTrip;
 
     onMount(async () => {
         token = localStorage.getItem('token');
@@ -42,3 +44,6 @@
     }
 </script>
 
+<div>
+    {completedTrip.tripName}
+</div>

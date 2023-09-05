@@ -6,6 +6,7 @@
     import UploadFile from './UploadFile.svelte';
     import StaticMap from './StaticMap.svelte';
     import Modal from './Modal.svelte';
+    import LoadingIcon from './LoadingIcon.svelte';
 
     let routesStore;
     let token;
@@ -95,30 +96,36 @@
     </Card>
     
     {#if loading}
-        <p>Loading routes . . .</p>
+        <div class="loading-container">
+            <LoadingIcon />
+            <p>Loading routes . . .</p>
+        </div>
     {:else if routesStore !== undefined && routesStore.length > 0}
         {#each routesStore.slice().reverse() as route (route.id)}
             <!-- svelte-ignore a11y-click-events-have-key-events -->
             <div class='route-item' on:click={goto(`/route_detail/${route.idString}`)}>
-                <div class='map-container'>
-                    <StaticMap mapUrl={route.routeStaticMapUrl}/>
+                <div class='inner-item'>
+                    <div class='map-container'>
+                        <StaticMap mapUrl={route.routeStaticMapUrl}/>
+                    </div>
+                    <div class='route-details'>
+                        <h4>{route.routeName}</h4>
+                        <p>
+                            Distance: <p2>{route.routeLength} {$units}</p2>
+                            <br>
+                            Elevation gain: <p2>{route.routeElevationGain} m</p2>
+                            <br>
+                            Elevation loss: <p2>{route.routeElevationLoss} m</p2>
+                            <br>
+                            {#if route.routeDescription !== "Optional.empty"} Description: {route.routeDescription}{/if}  
+                        </p>                      
+                    </div>
                 </div>
-                <div class='route-details'>
-                    <h4>{route.routeName}</h4>
-                    <p>
-                        Distance: {route.routeLength} {$units}
-                        <br>
-                        Elevation gain: {route.routeElevationGain} m
-                        <br>
-                        Elevation loss: {route.routeElevationLoss} m
-                        <br>
-                        {#if route.routeDescription !== "Optional.empty"}{route.routeDescription}{/if}
-                    </p>
+                <div class="button-container">
                     <button on:click={goto(`/route_detail/${route.idString}`)}>View route</button>
                     <button on:click={(event) => {event.stopPropagation(); handleDelete(route.idString);}}>Delete route</button>
                 </div>
             </div>
-            <br>
         {/each}
     {:else}
         <p>There are no routes to show, upload a route!</p>
@@ -135,7 +142,6 @@
 
 
 <style>
-
     .card-content {
         display: flex;
         justify-content: space-between;
@@ -143,15 +149,15 @@
         padding: 10px;
     }
     .card-title {
-        flex-grow: 1; /* Allow the first item to grow and take up available space */
-        text-align: left; /* Align the first item to the left */
+        flex-grow: 1;
+        text-align: left;
         margin-right: auto;
     }
 
     .card-content button {
-        flex-shrink: 0; /* Prevent the second item from shrinking */
-        text-align: right; /* Align the second item to the right */
-        margin-left: auto; /* Push the first item to the left */
+        flex-shrink: 0;
+        width: 60%;
+        margin-left: auto;
     }
 
     .routesListFeed {
@@ -159,15 +165,30 @@
     }
 
     .route-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    background: rgba(0, 0, 0, 0.1);
-    padding: 10px;
-    border-radius: 2px;
-    box-shadow: 2px 4px 6px rgba(38, 214, 149, 0.192);
-    margin: 10px;
-    cursor: pointer;
+        gap: 10px;
+        background: rgba(0, 0, 0, 0.1);
+        padding: 5px;
+        border-radius: 2px;
+        box-shadow: 2px 4px 6px rgba(38, 214, 149, 0.1);
+        margin: 5px;
+        cursor: pointer;
+    }
+
+    .route-item:hover {
+        background: rgba(38, 214, 149, 0.1);
+    }
+
+
+    .inner-item {
+        display: flex;
+        align-items: center;
+        padding: 2px;
+        margin: 5px;
+    }
+
+    .button-container {
+        padding: 2px;
+        margin: 5px;
     }
 
     .route-item button {
@@ -180,9 +201,10 @@
     }
 
     .map-container {
-        width: 160px;
-        height: 160px;
+        width: 150px;
+        height: 150px;
         overflow: hidden;
+        padding-right: 5px;
     }
 
     .route-details {
@@ -190,5 +212,6 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        padding-left: 5px;
     }
 </style>

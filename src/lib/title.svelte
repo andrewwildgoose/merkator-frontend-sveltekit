@@ -40,10 +40,6 @@
     <div class="welcome">
         <h4>Welcome, {userDetails.name}!</h4>
     </div>
-    {:else}
-    <div class="welcome">
-        <h4>User details not found</h4>
-    </div>
     {/if}
 </div>
 

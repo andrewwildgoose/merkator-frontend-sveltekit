@@ -90,7 +90,7 @@
         cursor: pointer;
         display: block;
         margin: 0 auto;
-        border: 1px solid rgba(38, 214, 150, 0.2);
+        /* border: 1px solid rgba(38, 214, 150, 0.2); */
     }
     .login button:hover {
         background-color: rgba(38, 214, 150, 0.2);
