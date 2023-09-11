@@ -8,7 +8,6 @@
 
     // Find the route with the matching ID in the userRoutes store
     let trip = $userTrips.find(t => t.idString === tripId);
-    console.log(trip);
 </script>
 
-<TripDetail {trip} />
+<TripDetail {trip} {tripId}/>

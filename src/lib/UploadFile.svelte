@@ -46,13 +46,8 @@
             });
 
             if (response.ok) {
-                console.log("Success!!!!")
                 // Handle success
                 dispatch('add-success');
-                console.log("UF: Upload success event dispatched");
-                //dispatch('close');
-                //console.log("UF: Close event dispatched");
-                
             } else {
                 // Handle error
                 errorMessage = "Error uploading route.";
@@ -64,10 +59,12 @@
 </script>
 
 
-
+<!-- main div container -->
 <div class="route-upload">
     <h2>Upload Route</h2>
+    <!-- form element -->
     <form on:submit={handleSubmit}>
+        <!-- file upload handling -->
         <label class="file-upload-label">
             <input type="file" accept=".gpx" bind:files={selectedFiles} />
             {#if selectedFiles[0]}
@@ -75,10 +72,12 @@
                 {:else}Select route GPX file
             {/if}
         </label>
+        <!-- route name input -->
         <label class="route-name">
             Route name:
             <input type="text" bind:value={routeName} />
         </label>
+    <!-- subimssion handling -->
     <button type="submit">Upload</button>
     {#if errorMessage}
         <p class="error">{errorMessage}</p>

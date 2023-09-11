@@ -114,7 +114,7 @@
 
 </script>
 
-<div class="tripsListFeed">
+<div class="list-feed">
     <Card>
         <div class="card-content">
             <h2 class="card-title">Trips</h2>
@@ -130,7 +130,7 @@
     {:else if tripsStore !== undefined && tripsStore.length > 0}
         {#each tripsStore.slice().reverse() as trip (trip.id)}
             <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <div class='trip-item' on:click={() => trip.tripRouteNames.length !== 0 ? goto(`/trip_detail/${trip.idString}`) : openRoutesOverlay(trip)}>
+            <div class='feed-item' on:click={() => trip.tripRouteNames.length !== 0 ? goto(`/trip_detail/${trip.idString}`) : openRoutesOverlay(trip)}>
                 {#if trip.tripRouteNames.length !== 0}
                 <div class="inner-item">
                     <div class='map-container'>
@@ -190,49 +190,6 @@
 </div>
 
 <style>
-    .card-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px;
-    }
-
-    .card-title {
-        flex-grow: 1;
-        text-align: left;
-        margin-right: auto;
-    }
-
-    .card-content button {
-        flex-shrink: 0;
-        width: 60%;
-        margin-left: auto;
-    }
-    
-    .tripsListFeed {
-        gap: 20px;
-    }
-
-    .trip-item {
-        gap: 10px;
-        background: rgba(0, 0, 0, 0.1);
-        padding: 5px;
-        border-radius: 2px;
-        box-shadow: 2px 4px 6px rgba(38, 214, 149, 0.1);
-        margin: 5px;
-        cursor: pointer;
-    }
-
-    .trip-item:hover {
-        background: rgba(38, 214, 149, 0.1);
-    }
-
-    .inner-item {
-        display: flex;
-        align-items: center;
-        padding: 2px;
-        margin: 5px;
-    }
 
     .button-container {
         padding: 2px;
@@ -254,12 +211,12 @@
         display: block;
     }
 
-    .trip-item .trip-details {
+    .feed-item .trip-details {
         display: flex;
         flex-direction: column;
     }
 
-    .trip-item button {
+    .feed-item button {
         width: 100%;
         padding: 8px;
         margin-top: 5px;

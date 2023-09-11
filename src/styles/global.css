@@ -73,6 +73,7 @@ button:focus {
 }
 
 /* custom styles here */
+/* font styling */
 h1 {
 	color: #26D696;
 	font-family: 'Helvetica', sans-serif;
@@ -103,6 +104,52 @@ p2 {
 	font-family: 'Helvetica', sans-serif;
 	font-size: 1em;
 }
+
+/* Feed styling */
+.card-content {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 10px;
+}
+.card-title {
+	flex-grow: 1;
+	text-align: left;
+	margin-right: auto;
+}
+
+.card-content button {
+	flex-shrink: 0;
+	width: 60%;
+	margin-left: auto;
+}
+
+.list-feed {
+	gap: 20px;
+} 
+
+.feed-item {
+	gap: 10px;
+	background: rgba(0, 0, 0, 0.1);
+	padding: 5px;
+	border-radius: 2px;
+	box-shadow: 2px 4px 6px rgba(38, 214, 149, 0.1);
+	margin: 5px;
+	cursor: pointer;
+}
+
+.feed-item:hover {
+	background: rgba(38, 214, 149, 0.1);
+}
+
+.inner-item {
+	display: flex;
+	align-items: center;
+	padding: 2px;
+	margin: 5px;
+}
+
+/* Map styling */
 
 .small-map-box {
 	box-sizing: border-box;

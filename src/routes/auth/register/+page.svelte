@@ -1,10 +1,12 @@
 <script>
     import { invalidateAll, goto } from '$app/navigation';
     import { applyAction } from '$app/forms';
+    import LoadingIcon from '../../../lib/LoadingIcon.svelte';
 
-    import NavBar from "../../../lib/navBar.svelte";
+    let registering = false;
 
     async function handleSubmit(event) {
+        registering = true;
         event.preventDefault();
 
         const formData = {
@@ -29,12 +31,14 @@
             // Store the JWT in local storage
             localStorage.setItem('token', result.token);
             console.log("token saved to local storage: ", result.token)
+            registering = false;
 
             // rerun all `load` functions, following the successful update
             await invalidateAll();
             goto("/"); // Redirect to home page after registration
             console.log("redirected")
         } else {
+            registering = false;
             // Handle registration failure
             console.log("unsuccessful")
             applyAction(result);
@@ -58,6 +62,12 @@
         </label>
         <button>Register</button>
     </form>
+    {#if registering}
+    <div class="loading-container">
+        <LoadingIcon />
+        <p>Regisering your user account . . .</p>
+    </div>
+{/if}
 </div>
 
 <style>

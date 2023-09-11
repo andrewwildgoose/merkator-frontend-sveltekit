@@ -7,7 +7,7 @@
         background: rgba(0, 0, 0, 0.1);
         padding: 10px;
         border-radius: 2px;
-        box-shadow: 2px 4px 6px rgba(38, 214, 150, 0.1);
+        box-shadow: 2px 4px 6px rgba(38, 214, 150, 0.15);
         margin: 10px;
     }
 </style>

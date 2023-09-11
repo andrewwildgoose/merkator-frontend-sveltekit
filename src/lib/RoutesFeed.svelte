@@ -87,7 +87,7 @@
     
 </script>
 
-<div class="routesListFeed">
+<div class="list-feed">
     <Card>
         <div class="card-content">
             <h2 class="card-title">Routes</h2>
@@ -103,7 +103,7 @@
     {:else if routesStore !== undefined && routesStore.length > 0}
         {#each routesStore.slice().reverse() as route (route.id)}
             <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <div class='route-item' on:click={goto(`/route_detail/${route.idString}`)}>
+            <div class='feed-item' on:click={goto(`/route_detail/${route.idString}`)}>
                 <div class='inner-item'>
                     <div class='map-container'>
                         <StaticMap mapUrl={route.routeStaticMapUrl}/>
@@ -142,56 +142,13 @@
 
 
 <style>
-    .card-content {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 10px;
-    }
-    .card-title {
-        flex-grow: 1;
-        text-align: left;
-        margin-right: auto;
-    }
-
-    .card-content button {
-        flex-shrink: 0;
-        width: 60%;
-        margin-left: auto;
-    }
-
-    .routesListFeed {
-        gap: 20px;
-    }
-
-    .route-item {
-        gap: 10px;
-        background: rgba(0, 0, 0, 0.1);
-        padding: 5px;
-        border-radius: 2px;
-        box-shadow: 2px 4px 6px rgba(38, 214, 149, 0.1);
-        margin: 5px;
-        cursor: pointer;
-    }
-
-    .route-item:hover {
-        background: rgba(38, 214, 149, 0.1);
-    }
-
-
-    .inner-item {
-        display: flex;
-        align-items: center;
-        padding: 2px;
-        margin: 5px;
-    }
 
     .button-container {
         padding: 2px;
         margin: 5px;
     }
 
-    .route-item button {
+    .feed-item button {
         width: 100%;
         padding: 8px;
         margin-top: 5px;

@@ -5,8 +5,13 @@
     import Card from "../lib/card.svelte";
     import RoutesFeed from "../lib/RoutesFeed.svelte";
     import TripsFeed from "../lib/TripsFeed.svelte";
+    import CompletedTripsFeed from "../lib/CompletedTripsFeed.svelte"
 
     let userDetails = null; // Store fetched user details
+    let feedSelected = false;
+    let showHomeFeed = false;
+    let showPlannedFeed = false;
+    let showCompletedFeed = false;
 
     onMount(async () => {
         const token = localStorage.getItem('token');
@@ -38,36 +43,175 @@
         }
     });
 
+    const showPlanned = () => {
+        showHomeFeed = true;
+        feedSelected = true;
+        showPlannedFeed = true;
+        showCompletedFeed = false;
+    };
+
+    const showCompleted = () => {
+        showHomeFeed = true;
+        feedSelected = true;
+        showCompletedFeed = true;
+        showPlannedFeed = false;
+    }
+
 </script>
 
-<div class="homeFeed">
-    <div class="feedContainer">
-        <div class="routeFeed">
-            <Card>
-                <RoutesFeed />
-            </Card>
+<div class="parent-container">
+    {#if !feedSelected}
+    <div class="selector-container">
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <div class="feed-selector" on:click={showPlanned}>
+            <h1>Plan</h1>
+            <br>
+            <p>View your planned routes and trips</p> 
         </div>
-
-        <div class="tripFeed">
-            <Card>
-                <TripsFeed />
-            </Card>
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <div class="feed-selector" on:click={showCompleted}>
+            <h1>Complete</h1>
+            <br>
+            <p>View your completed trips</p> 
+        </div>        
+    </div>
+    {/if}
+    {#if showHomeFeed}
+    {#if showPlannedFeed}
+    <div class="small-selector-container">
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <div class="small-feed-selector-current" on:click={showPlanned}>
+            <h2>Plan</h2>
+        </div>
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <div class="small-feed-selector" on:click={showCompleted}>
+            <h2>Complete</h2>
+        </div>        
+    </div>
+    {:else if showCompletedFeed}
+    <div class="small-selector-container">
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <div class="small-feed-selector" on:click={showPlanned}>
+            <h2>Plan</h2>
+        </div>
+        <!-- svelte-ignore a11y-click-events-have-key-events -->
+        <div class="small-feed-selector-current" on:click={showCompleted}>
+            <h2>Complete</h2>
+        </div>        
+    </div>
+    {/if}
+    <div class="home-feed">
+        <div class="feed-container">
+            {#if showPlannedFeed}
+                <div class="route-feed">
+                    <Card>
+                        <RoutesFeed />
+                    </Card>
+                </div>
+                <div class="trip-feed">
+                    <Card>
+                        <TripsFeed />
+                    </Card>
+                </div>
+            {:else if showCompletedFeed}
+                <div class="comp-trip-feed">
+                    <Card>
+                        <CompletedTripsFeed />
+                    </Card>
+                </div>
+            {/if}
         </div>
     </div>
+    {/if}
+    
 </div>
 
 
 
 <style>
-    .homeFeed {
-        height: 70vh;
+    .parent-container {
+        height: 80vh;
+        width: 100%;
+    }
+
+    .selector-container {
+        display: flex;
+        justify-content: center;
+        height: 80vh;
+        width: 100%;
+        padding-top: 30px;
+        text-align: center;
+    
+    }
+
+    .small-selector-container {
+        display: flex;
+        justify-content: center;
+        height: 10%;
+        width: 100%;
+        padding: 10px;
+        margin: 2px;
+        text-align: center;
+    
+    }
+
+    .feed-selector {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        width: 40%;
+        height: 80%;
+        padding: 10px;
+        border: 2px solid rgba(38, 214, 149, 0.15);
+        border-radius: 2px;
+        margin: 10px;
+    }
+    .small-feed-selector {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        width: 40%;
+        /* height: 100%; */
+        padding: 15px;
+        border: 2px solid rgba(38, 214, 149, 0.15);
+        border-radius: 2px;
+        margin: 10px;
+    }
+    .small-feed-selector-current {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        width: 40%;
+        /* height: 100%; */
+        padding: 15px;
+        background: rgba(38, 214, 149, 0.2);
+        /* border: 2px solid rgba(38, 214, 149, 0.15); */
+        border-bottom: 4px solid rgba(38, 214, 149, 0.3);
+        border-radius: 2px;
+        margin: 10px;
+    }
+    .feed-selector:hover,
+    .small-feed-selector:hover {
+        background: rgba(38, 214, 149, 0.2);
+        cursor: pointer;
+    }
+
+    .home-feed {
+        height: 85vh;
         width: auto;
         display: flex;
         justify-content: space-between;
-        overflow: hidden;
+        overflow-y: hidden;
+        overflow-x: auto;
+        border-top: 4px solid rgba(38, 214, 149, 0.3);
     }
 
-    .feedContainer {
+    .feed-container {
         display: flex;
         gap: 20px;
         min-width: 800px;
@@ -75,8 +219,9 @@
         flex: 1;
     }
 
-    .routeFeed,
-    .tripFeed {
+    .route-feed,
+    .trip-feed,
+    .comp-trip-feed {
         flex: 1;
         min-width: 400px;
         overflow-y: auto;

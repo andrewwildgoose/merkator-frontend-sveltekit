@@ -1,37 +1,51 @@
 <script>
     import { invalidateAll, goto } from '$app/navigation';
-    import { applyAction} from '$app/forms';
+    import LoadingIcon from '../../../lib/LoadingIcon.svelte';
+
+
+    let loginMessage;
+    let loggingIn = false;
+
 
     async function handleSubmit(event) {
+        loggingIn = true;
         event.preventDefault();
-
+        
         const formData = {
             email: event.target.email.value,
             password: event.target.password.value
         };
+        
+        try{
+            const response = await fetch("http://localhost:3000/merkator/api/v1/auth/authenticate", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
 
-        const response = await fetch("http://localhost:3000/merkator/api/v1/auth/authenticate", {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(formData)
-        });
+            const result = await response.json();
 
-        const result = await response.json();
+            if (result.token) {
+                // Store the JWT in local storage
+                localStorage.setItem('token', result.token);
 
-        if (result.token) {
-            // Store the JWT in local storage
-            localStorage.setItem('token', result.token);
-
-            // rerun all `load` functions, following the successful update
-            await invalidateAll();
-            goto("/"); // Redirect to home page after registration
-            console.log("redirected")
-        } else {
-            // Handle registration failure
-            console.log("unsuccessful")
-            applyAction(result);
+                // rerun all `load` functions, following the successful update
+                await invalidateAll();
+                goto("/"); // Redirect to home page after registration
+                console.log("redirected")
+                loggingIn = false;
+            } else {
+                // Handle login failure
+                console.log("unsuccessful")
+                loginMessage = 'Log in attempt unsuccessful, please check your credentials and try again.';
+                loggingIn = false;
+            }
+        } catch (error) {
+            console.error(error);
+            loginMessage = 'Server error, please refresh the page and try again.';
+            loggingIn = false;
         }
     }
 </script>
@@ -48,6 +62,16 @@
         </label>
         <button>Log in</button>
     </form>
+    {#if loggingIn}
+        <div class="loading-container">
+            <LoadingIcon />
+            <p>Logging in . . .</p>
+        </div>
+    {/if}
+    {#if loginMessage}
+    <br>
+    <div class="error-message">{loginMessage}</div>
+    {/if}
 </div>
 
 <style>
@@ -95,5 +119,8 @@
     .login button:hover {
         background-color: rgba(38, 214, 150, 0.2);
 	    border-color: rgba(38, 214, 150, 0.2);
+    }
+    .error-message {
+        color: crimson;
     }
 </style>

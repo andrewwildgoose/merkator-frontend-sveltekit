@@ -1,16 +1,38 @@
 <script>
     import Title from '$lib/title.svelte'
+    import { onMount } from 'svelte';
+    import logo from '$lib/assets/Merkator-logo-1.png';
+
+    onMount(() => {
+        // Add click event listeners to all anchor (a) elements with the "refresh-link" class
+        const refreshLinks = document.querySelectorAll('.refresh-link');
+
+        refreshLinks.forEach(link => {
+            link.addEventListener('click', (event) => {
+                const currentUrl = window.location.href;
+                const linkUrl = event.currentTarget.href;
+
+                // Check if the link URL matches the current URL
+                if (linkUrl === currentUrl) {
+                    window.location.reload(); // Force a page reload
+                    event.preventDefault(); // Prevent the default link behavior
+                }
+            });
+        });
+    });
 </script>
 
 <div class="nav-bar">
     <div class="title">
+        <div class="image-container">
+            <img src={logo} alt="logo">
+        </div>
         <Title />
     </div>
     <div class="nav-buttons">
-        <a href="/">home</a>
-        <a href="/user">user home</a>
-        <a href="/auth/login">log in</a>
-        <a href="/auth/register">register</a>
+        <a href="/" class="refresh-link">home</a>
+        <a href="/auth/login" class="refresh-link">log in</a>
+        <a href="/auth/register" class="refresh-link">register</a>
     </div> 
 </div>
 
@@ -24,9 +46,19 @@
     }
 
     .title {
+        display: flex;
+        align-items: center;
         text-align: left;
         margin: 0;
         padding: 0;
+    }
+
+    .image-container {
+        margin: 0;
+    }
+    .image-container img {
+        width: 100px; /* Set the width of the image */
+        height: 100px; /* Set the height of the image */
     }
 
     .nav-buttons a {
