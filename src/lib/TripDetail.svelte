@@ -1,10 +1,11 @@
 <script>
     import { onMount } from 'svelte';
     import { goto } from '$app/navigation';
-    import { units, deleteTrip, userRoutes, fetchUserRoutes } from '../stores';
+    import { units, deleteTrip, userRoutes, fetchUserRoutes, rgbToHex } from '../stores';
     import TripMap from './TripMap.svelte';
     import StaticMap from './StaticMap.svelte';
     import LoadingIcon from './LoadingIcon.svelte';
+    import ElevationChart from './ElevationChart.svelte';
 
     export let trip;
     export let tripId
@@ -12,7 +13,11 @@
     let token;
     let loading = true;
     let tripRoutes = [];
+    let tripElevData = [];
+    let datasets = [];
     let data;
+    let numMarkers = 0;
+    let colors = [];
     
     onMount(async () => {
         token = localStorage.getItem('token');
@@ -53,6 +58,58 @@
         }
 
         tripRoutes = findRoutesByIds(trip.tripRouteIds, $userRoutes);
+
+        // Elevation graph data building
+        // Adds a number of null values to the start of each set of data 
+        // to ensure correct starting position on the graph 
+        for (const route of tripRoutes) {
+            const routeData = JSON.parse(route.routeGpxString);
+            let elevPoints = [];
+            for (let i = 0; i < numMarkers; i++) {
+                elevPoints.push(null);
+            }
+            const elevData = routeData.trk.trkseg.trkpt.map(point => point.ele)
+            elevPoints = elevPoints.concat(elevData);
+
+            tripElevData.push(elevPoints);
+            numMarkers += elevData.length;
+        }
+
+        // Add a number of null values to the end of each dataset to ensure graph displays correctly
+        for (const elevPoints of tripElevData){
+            const postDataMarkers = numMarkers - elevPoints.length;
+            for (let i = 0; i< postDataMarkers; i++) {
+                elevPoints.push(null);
+            } 
+        }
+
+        // Calculate position in distance for x axis
+        const distMarkers = [];
+
+        for (let i = 0; i < numMarkers; i++) {
+            const markerPosition = (i / (numMarkers - 1)) * trip.tripLength; 
+            distMarkers.push(markerPosition); 
+        }
+
+        for (let i = 0; i < tripElevData.length; i++) {
+            const routeElevPoints = tripElevData[i];
+            const dataset = {
+                name: `${tripRoutes[i].routeName}`,
+                values: routeElevPoints,
+            };
+            datasets.push(dataset);
+            colors.push(rgbToHex(
+                    trip.tripRouteColours[i][0],
+                    trip.tripRouteColours[i][1],
+                    trip.tripRouteColours[i][2]
+                    ))
+        }
+
+        // Dataset for elevation graph
+        data = {
+            labels: distMarkers.map(marker => `${marker.toFixed(2)} ${$units}`),
+            datasets: datasets,
+        };
 
         loading = false;
     });
@@ -98,10 +155,10 @@
                 {#if trip.tripDescription !== null}|  {trip.tripDescription}{/if}
                 </p>
             </div>
-            <!-- <div class="elev-chart">
-                <ElevationChart data={data}/>
+            <div class="elev-chart">
+                <h4>Elevation chart</h4>
+                <ElevationChart data={data} colors={colors}/>
             </div>
-            -->
         </div>
         <div class="trip-route-feed">
             <h4>Trip routes</h4>
@@ -153,13 +210,18 @@
         padding: 10px;
     }
     
-    .map,
-    .elev-chart {
+    .map {
         display: flex;
         flex-grow: 1;
         box-sizing: border-box;
         position: relative;
         width: 100%;
+        margin: 0 auto;
+    }
+    .elev-chart {
+        box-sizing: border-box;
+        position: relative;
+        width: 800px;
         margin: 0 auto;
     }
 

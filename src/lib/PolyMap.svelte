@@ -6,6 +6,7 @@
     import "../../node_modules/mapbox-gl/dist/mapbox-gl.css";
 
     export let routeGpxString;
+    export let color;
 
     let mapContainer;
     let map;
@@ -53,8 +54,10 @@
                 type: 'line',
                 source: 'route',
                 paint: {
-                    'line-color': '#26D696',
-                    'line-width': 4
+                    'line-color': `${color}`,
+                    'line-opacity': 0.7,
+                    'line-width': 4,
+                    'line-dasharray': [5,0.5]
                 }
             });
             

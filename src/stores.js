@@ -46,6 +46,24 @@ export async function deleteTrip(tripId, token) {
     }
 }
 
+// Function to delete a completed trip
+export async function deleteCompletedTrip(completedTripId, token) {
+    const response = await fetch(`http://localhost:3000/merkator/user/completed_trip/${completedTripId}`, {
+        method: 'DELETE',
+        headers: {
+            'Authorization': `Bearer ${token}`
+        }
+    });
+
+    if (response.ok) {
+        return {
+            success: true,
+        };
+    } else {
+        console.error('Failed to delete completed trip');
+    }
+}
+
 // Fetch User Routes
 export async function fetchUserRoutes(headers) {
     console.log("Fetching User Routes");
@@ -69,3 +87,14 @@ export async function fetchUserRoutes(headers) {
 export const userRoutes = writable([]);
 export const userTrips = writable([]);
 export const userCompletedTrips = writable([]);
+
+// RBG to Hex colour converter
+export function rgbToHex(red, green, blue) {
+
+    const redHex = red.toString(16).padStart(2, '0');
+    const greenHex = green.toString(16).padStart(2, '0');
+    const blueHex = blue.toString(16).padStart(2, '0');
+
+    return `#${redHex}${greenHex}${blueHex}`;
+}
+

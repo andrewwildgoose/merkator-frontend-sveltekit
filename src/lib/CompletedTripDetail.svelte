@@ -1,13 +1,19 @@
 <script>
     import { onMount } from 'svelte';
     import LoadingIcon from './LoadingIcon.svelte';
-    import {units} from '../stores';
+    import {units, rgbToHex, deleteCompletedTrip} from '../stores';
     import TripMap from './TripMap.svelte';
+    import ElevationChart from './ElevationChart.svelte';
 
     export let completedTripId;
     let token;
     let loading = true;
     let completedTrip;
+    let tripElevData = [];
+    let datasets = [];
+    let data;
+    let numMarkers = 0;
+    let colors = [];
 
     onMount(async () => {
         token = localStorage.getItem('token');
@@ -23,6 +29,58 @@
         };
 
         fetchCompletedTrip(headers, completedTripId);
+
+        // Elevation graph data building
+        // Adds a number of null values to the start of each set of data 
+        // to ensure correct starting position on the graph 
+        for (const route of completedTrip.tripGpxStrings) {
+            const routeData = JSON.parse(route);
+            let elevPoints = [];
+            for (let i = 0; i < numMarkers; i++) {
+                elevPoints.push(null);
+            }
+            const elevData = routeData.trk.trkseg.trkpt.map(point => point.ele)
+            elevPoints = elevPoints.concat(elevData);
+
+            tripElevData.push(elevPoints);
+            numMarkers += elevData.length;
+        }
+
+        // Add a number of null values to the end of each dataset to ensure graph displays correctly
+        for (const elevPoints of tripElevData){
+            const postDataMarkers = numMarkers - elevPoints.length;
+            for (let i = 0; i< postDataMarkers; i++) {
+                elevPoints.push(null);
+            } 
+        }
+
+        // Calculate position in distance for x axis
+        const distMarkers = [];
+
+        for (let i = 0; i < numMarkers; i++) {
+            const markerPosition = (i / (numMarkers - 1)) * trip.tripLength; 
+            distMarkers.push(markerPosition); 
+        }
+
+        for (let i = 0; i < tripElevData.length; i++) {
+            const routeElevPoints = tripElevData[i];
+            const dataset = {
+                name: `${tripRoutes[i].routeName}`,
+                values: routeElevPoints,
+            };
+            datasets.push(dataset);
+            colors.push(rgbToHex(
+                    trip.tripRouteColours[i][0],
+                    trip.tripRouteColours[i][1],
+                    trip.tripRouteColours[i][2]
+                    ))
+        }
+
+        // Dataset for elevation graph
+        data = {
+            labels: distMarkers.map(marker => `${marker.toFixed(2)} ${$units}`),
+            datasets: datasets,
+        };
     
     });
 
@@ -48,6 +106,16 @@
         }
 
     }
+
+    const handleDelete = async (id) => {
+        if (confirm('Are you sure you want to delete this trip?')) {
+            const response = await deleteCompletedTrip(id, token);
+            console.log(response);
+            if (response.ok) {
+                handleSuccess(token)
+            }
+        }
+    };
 </script>
 
 {#if loading}
@@ -95,11 +163,13 @@
                 Average speed (elapsed time): <p2>{completedTrip.tripAvgSpeedElapsed} kph</p2>  |   
                 Average speed (moving): <p2>{completedTrip.tripAvgSpeedMoving} kph</p2>  
             </p>
-            
         </div>
-
+        <div class="elev-chart">
+            <h4>Elevation chart</h4>
+            <ElevationChart data={data} colors={colors}/>
+        </div>
     </div>
-    
+    <button on:click={() => handleDelete(completedTrip.idString)}>Delete trip</button>
 </div>
 {/if}
 
@@ -117,11 +187,19 @@
         padding: 10px;
     }
 
-    .basic-info{
+    .basic-info {
         text-align: center;
+        padding: 10px;
     }
-    .basic-info,
-    .map,
+    
+    .map {
+        display: flex;
+        flex-grow: 1;
+        box-sizing: border-box;
+        position: relative;
+        width: 100%;
+        margin: 0 auto;
+    }
     .elev-chart {
         box-sizing: border-box;
         position: relative;
