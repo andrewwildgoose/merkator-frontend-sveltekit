@@ -38,7 +38,7 @@
                 errorMessage = 'Failed to fetch route mappings';
             }
         } finally {
-            loading = false; // Set loading to false once data is fetched
+            loading = false;
         }
     }
 
@@ -91,7 +91,7 @@
     };
 </script>
 
-<div>
+<div class="complete-trip">
     {#if loading}
     <div class="loading-container">
         <LoadingIcon />
@@ -127,7 +127,7 @@
         <p2>
             Congratulations on your progress.
             <br>
-            Completing routes . . .
+            Completing routes . . . this might take a minute
         </p2>
     </div>
     {:else if errorMessage}
@@ -136,6 +136,9 @@
 </div>
 
 <style>
+    .complete-trip {
+        padding: 10px;
+    }
     .route-item {
         display: flex;
         align-items: center;

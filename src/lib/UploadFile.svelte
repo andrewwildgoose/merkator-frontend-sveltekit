@@ -62,6 +62,7 @@
 <!-- main div container -->
 <div class="route-upload">
     <h2>Upload Route</h2>
+    <p>Select a GPX file to add to your routes</p>
     <!-- form element -->
     <form on:submit={handleSubmit}>
         <!-- file upload handling -->
@@ -93,7 +94,7 @@
         display: flex;
         padding: 10px;
         flex-direction: column;
-        align-items: center;
+        align-items: left;
         margin-bottom: 10px;
     }
     .route-name {

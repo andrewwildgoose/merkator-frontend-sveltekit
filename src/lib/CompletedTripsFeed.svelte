@@ -64,7 +64,7 @@
             <p>
                 Loading completed trips . . .
                 <br><br>
-                . . . this will take a minute.
+                . . . this might take a minute.
             </p>
         </div>
     {:else if compTripsStore !== undefined && compTripsStore.length > 0}

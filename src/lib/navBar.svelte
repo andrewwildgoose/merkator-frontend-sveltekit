@@ -41,7 +41,7 @@
         display: flex;
         justify-content: space-between; /* Align title to the left and buttons to the right */
         align-items: center; /* Center vertically within the nav bar */
-        padding: 10px 20px;
+        padding: 0px 0px;
         background-color: rgba(38, 214, 150, 0.1);
     }
 

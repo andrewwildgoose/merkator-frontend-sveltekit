@@ -130,7 +130,7 @@
     {:else if tripsStore !== undefined && tripsStore.length > 0}
         {#each tripsStore.slice().reverse() as trip (trip.id)}
             <!-- svelte-ignore a11y-click-events-have-key-events -->
-            <div class='feed-item' on:click={() => trip.tripRouteNames.length !== 0 ? goto(`/trip_detail/${trip.idString}`) : openRoutesOverlay(trip)}>
+            <div class='feed-item' on:click={() => trip.tripRouteNames.length !== 0 ? goto(`/trip_detail/${trip.idString}`, loading=true) : openRoutesOverlay(trip)}>
                 {#if trip.tripRouteNames.length !== 0}
                 <div class="inner-item">
                     <div class='map-container'>
@@ -154,7 +154,7 @@
                     
                 </div>
                 <div class="button-container">
-                    <button on:click={goto(`/trip_detail/${trip.idString}`)}>View trip</button>
+                    <button on:click={goto(`/trip_detail/${trip.idString}`, loading=true)}>View trip</button>
                     <button class="options-button" on:click={(event) => {event.stopPropagation(); toggleOptions(trip.idString)}}>
                         Options</button>
                     <div class="options {showOptionsFor === trip.idString && showOptions && 'visible'}">

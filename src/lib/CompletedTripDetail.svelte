@@ -7,8 +7,8 @@
 
     export let completedTripId;
     let token;
-    let loading = true;
     let completedTrip;
+    let loading = true;
     let tripElevData = [];
     let datasets = [];
     let data;
@@ -27,92 +27,98 @@
         const headers = {
             'Authorization': `Bearer ${token}`
         };
-
-        fetchCompletedTrip(headers, completedTripId);
-
-        // Elevation graph data building
-        // Adds a number of null values to the start of each set of data 
-        // to ensure correct starting position on the graph 
-        for (const route of completedTrip.tripGpxStrings) {
-            const routeData = JSON.parse(route);
-            let elevPoints = [];
-            for (let i = 0; i < numMarkers; i++) {
-                elevPoints.push(null);
-            }
-            const elevData = routeData.trk.trkseg.trkpt.map(point => point.ele)
-            elevPoints = elevPoints.concat(elevData);
-
-            tripElevData.push(elevPoints);
-            numMarkers += elevData.length;
-        }
-
-        // Add a number of null values to the end of each dataset to ensure graph displays correctly
-        for (const elevPoints of tripElevData){
-            const postDataMarkers = numMarkers - elevPoints.length;
-            for (let i = 0; i< postDataMarkers; i++) {
-                elevPoints.push(null);
-            } 
-        }
-
-        // Calculate position in distance for x axis
-        const distMarkers = [];
-
-        for (let i = 0; i < numMarkers; i++) {
-            const markerPosition = (i / (numMarkers - 1)) * trip.tripLength; 
-            distMarkers.push(markerPosition); 
-        }
-
-        for (let i = 0; i < tripElevData.length; i++) {
-            const routeElevPoints = tripElevData[i];
-            const dataset = {
-                name: `${tripRoutes[i].routeName}`,
-                values: routeElevPoints,
-            };
-            datasets.push(dataset);
-            colors.push(rgbToHex(
-                    trip.tripRouteColours[i][0],
-                    trip.tripRouteColours[i][1],
-                    trip.tripRouteColours[i][2]
-                    ))
-        }
-
-        // Dataset for elevation graph
-        data = {
-            labels: distMarkers.map(marker => `${marker.toFixed(2)} ${$units}`),
-            datasets: datasets,
-        };
-    
+        await fetchCompletedTrip(headers, completedTripId);
+        await processCompletedTrip(completedTrip)
     });
+
+    const processCompletedTrip = async (completedTrip) => {
+        // Elevation graph data building
+        try {
+            
+            // Adds a number of null values to the start of each set of data 
+            // to ensure correct starting position on the graph 
+            for (const route of completedTrip.tripGpxStrings) {
+                const routeData = JSON.parse(route);
+                let elevPoints = [];
+                for (let i = 0; i < numMarkers; i++) {
+                    elevPoints.push(null);
+                }
+                const elevData = routeData.trk.trkseg.trkpt.map(point => point.ele)
+                elevPoints = elevPoints.concat(elevData);
+
+                tripElevData.push(elevPoints);
+                numMarkers += elevData.length;
+            }
+
+            // Add a number of null values to the end of each dataset to ensure graph displays correctly
+            for (const elevPoints of tripElevData){
+                const postDataMarkers = numMarkers - elevPoints.length;
+                for (let i = 0; i< postDataMarkers; i++) {
+                    elevPoints.push(null);
+                } 
+            }
+
+            // Calculate position in distance for x axis
+            const distMarkers = [];
+
+            for (let i = 0; i < numMarkers; i++) {
+                const markerPosition = (i / (numMarkers - 1)) * completedTrip.tripLength; 
+                distMarkers.push(markerPosition); 
+            }
+
+            for (let i = 0; i < tripElevData.length; i++) {
+                const routeElevPoints = tripElevData[i];
+                const dataset = {
+                    name: `${completedTrip.tripRouteNames[i]}`,
+                    values: routeElevPoints,
+                };
+                datasets.push(dataset);
+                colors.push(rgbToHex(
+                        completedTrip.tripRouteColours[i][0],
+                        completedTrip.tripRouteColours[i][1],
+                        completedTrip.tripRouteColours[i][2]
+                        ))
+            }
+
+            // Dataset for elevation graph
+            data = {
+                labels: distMarkers.map(marker => `${marker.toFixed(2)} ${$units}`),
+                datasets: datasets,
+            };
+        } catch (error) {
+            errorMessage = "An error occurred while creating the trip elevation chart.";
+        }
+        finally {
+            loading = false;
+        }
+        
+    }
 
     const fetchCompletedTrip = async (headers, completedTripId) => {
         try {
             const response = await fetch(`http://localhost:3000/merkator/user/completed_trip/${completedTripId}`, {headers});
             if (response.ok) {
                 completedTrip = await response.json();
-                console.log("Completed trip fetched")
-                console.log("Combined GPX Strings:")
-                console.log(completedTrip.tripGpxStrings.concat(completedTrip.tripCompletedGpxStrings))
-                console.log("Combined Colours:")
-                console.log(completedTrip.tripRouteColours.concat(completedTrip.tripCompletedRouteColours))
+                // return completedTrip;
+
             } else {
-                console.log("Error fetching trip")
                 errorMessage = "Error fetching trip"
             }
         } catch (error) {
             errorMessage = "An error occurred while fetching the trip.";
         }
-        finally {
-            loading = false;
-        }
+    }
 
+    const handleSuccess = () => {
+        goto(`/`);
     }
 
     const handleDelete = async (id) => {
-        if (confirm('Are you sure you want to delete this trip?')) {
+        if (confirm('Are you sure you want to delete this completed trip?')) {
             const response = await deleteCompletedTrip(id, token);
             console.log(response);
             if (response.ok) {
-                handleSuccess(token)
+                handleSuccess()
             }
         }
     };
@@ -122,9 +128,9 @@
     <div class="loading-container">
         <LoadingIcon />
         <p2>
-            Loading completed trip . . .
+            Loading . . .
             <br><br>
-            . . . this will take a minute.
+            . . . this might take a minute.
         </p2>
     </div>
 {:else}
@@ -176,8 +182,12 @@
 <style>
     .full-detail {
         display: flex;
-        height: 70vh;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        width: 100%;
     }
+
     .trip-detail {
         position: relative;
         flex-grow: 1;
@@ -200,10 +210,10 @@
         width: 100%;
         margin: 0 auto;
     }
-    .elev-chart {
+    /* .elev-chart {
         box-sizing: border-box;
         position: relative;
         width: 800px;
         margin: 0 auto;
-    }
+    } */
 </style>

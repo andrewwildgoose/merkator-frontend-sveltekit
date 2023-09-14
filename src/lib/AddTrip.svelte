@@ -54,6 +54,7 @@
 
 <div class="trip-create">
     <h2>Create Trip</h2>
+    <p>Creating a trip will allow you to add routes<br>to it and view their statistics as a full trip</p>
     <div class="modal-content">
         <form on:submit={handleSubmit}>
         <label>
@@ -73,7 +74,7 @@
         display: flex;
         padding: 10px;
         flex-direction: column;
-        align-items: center;
+        align-items: left;
         margin-bottom: 10px;
     }
     .modal-content {

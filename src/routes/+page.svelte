@@ -141,7 +141,6 @@
         width: 100%;
         padding-top: 30px;
         text-align: center;
-    
     }
 
     .small-selector-container {
@@ -149,10 +148,6 @@
         justify-content: center;
         height: 10%;
         width: 100%;
-        padding: 10px;
-        margin: 2px;
-        text-align: center;
-    
     }
 
     .feed-selector {
@@ -164,6 +159,7 @@
         height: 80%;
         padding: 10px;
         border: 2px solid rgba(38, 214, 149, 0.15);
+        box-shadow: 1px 2px 3px rgba(38, 214, 149, 0.192);
         border-radius: 2px;
         margin: 10px;
     }
@@ -174,7 +170,6 @@
         align-items: center;
         text-align: center;
         width: 40%;
-        /* height: 100%; */
         padding: 15px;
         border: 2px solid rgba(38, 214, 149, 0.15);
         border-radius: 2px;
@@ -187,10 +182,8 @@
         align-items: center;
         text-align: center;
         width: 40%;
-        /* height: 100%; */
         padding: 15px;
         background: rgba(38, 214, 149, 0.2);
-        /* border: 2px solid rgba(38, 214, 149, 0.15); */
         border-bottom: 4px solid rgba(38, 214, 149, 0.3);
         border-radius: 2px;
         margin: 10px;
@@ -202,13 +195,13 @@
     }
 
     .home-feed {
-        height: 85vh;
+        height: 80%;
         width: auto;
         display: flex;
         justify-content: space-between;
         overflow-y: hidden;
         overflow-x: auto;
-        border-top: 4px solid rgba(38, 214, 149, 0.3);
+        /* border-top: 4px solid rgba(38, 214, 149, 0.3); */
     }
 
     .feed-container {

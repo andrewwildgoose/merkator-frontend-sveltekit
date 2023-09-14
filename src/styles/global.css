@@ -126,6 +126,7 @@ p2 {
 
 .list-feed {
 	gap: 20px;
+	height: 80%;
 } 
 
 .feed-item {
@@ -211,4 +212,11 @@ input[type="file"] {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+}
+
+.elev-chart {
+	box-sizing: border-box;
+	position: relative;
+	width: 90%;
+	margin: 0 auto;
 }

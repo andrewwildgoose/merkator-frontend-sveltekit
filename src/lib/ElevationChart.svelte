@@ -4,6 +4,9 @@
     export let data;
     export let colors;
 
+    console.log("data: ", data)
+    console.log("colors: ", colors)
+
     let axisOptions = {
         xIsSeries: 1,
         xAxisMode: "tick"
@@ -17,6 +20,13 @@
 
 </script>
 
-<div>
+<div class='chart'>
     <Chart data={data} type="line" colors={colors} axisOptions={axisOptions} lineOptions={lineOptions} />
 </div>
+
+<style>
+    .chart {
+        width: 100%;
+    }
+
+</style>

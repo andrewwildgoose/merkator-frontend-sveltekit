@@ -30,7 +30,6 @@
             console.log("success!")
             // Store the JWT in local storage
             localStorage.setItem('token', result.token);
-            console.log("token saved to local storage: ", result.token)
             registering = false;
 
             // rerun all `load` functions, following the successful update

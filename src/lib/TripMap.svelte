@@ -1,7 +1,6 @@
 <script>
     import { onMount } from 'svelte';
     import mapboxgl from "mapbox-gl";
-    import {units} from '../stores';
     import startIcon from '$lib/assets/thick-green-loc-marker.svg';
     import finishIcon from '$lib/assets/flag-finish.svg';
     import currentIcon from '$lib/assets/current-location.svg';
@@ -99,9 +98,6 @@
                     type: 'Point',
                     coordinates: [start[0], start[1]]
                 },
-                properties: {
-                    title: 'Trip start'
-                }
             };
 
             // Load marker image and add it to Mapbox
@@ -152,10 +148,6 @@
                         type: 'Point',
                         coordinates: [end[0], end[1]]
                     },
-                    properties: {
-                        title: 'Trip finish',
-                        description: `${length} ${units}`
-                    }
                 };
                 try {
                     map.addSource('end-marker-source', {
@@ -198,9 +190,6 @@
                             type: 'Point',
                             coordinates: [currentMarkerCoords[0], currentMarkerCoords[1]]
                         },
-                        properties: {
-                            title: 'Current location',
-                        }
                     };
                     try {
                         map.addSource('current-marker-source', {
@@ -265,7 +254,7 @@
         box-sizing: border-box;
         position: relative;
         width: 75vw;
-        height: 50vh;
+        height: 40vh;
     }
     
     .map { 

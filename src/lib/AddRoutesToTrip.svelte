@@ -95,7 +95,7 @@
     {:else}
         
         <h2>Add Routes to {tripName}</h2>
-        <p>Select the routes you want to add to the trip:</p>
+        <p>Select the routes you want to add to the trip</p>
         <div class="add-routes-modal">
                 <div class="overlay-content">
                     {#each $userRoutes as route (route.id)}
@@ -121,6 +121,10 @@
         color: #26D696; 
         font-weight: bold; 
         background-color: rgba(38, 214, 149, 0.1);
+    }
+
+    .add-routes-modal {
+        padding: 10px;
     }
 
     .overlay-content {

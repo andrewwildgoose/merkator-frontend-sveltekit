@@ -42,8 +42,6 @@
         if (!trip) {
             try {
                 
-
-
                 const response = await fetch(`http://localhost:3000/merkator/user/trip/${tripId}`, { headers });
                 if (response.ok) {
                     trip = await response.json();
@@ -118,12 +116,17 @@
         return userRoutes.filter(route => routeIds.includes(route.idString));
     }
 
+    const handleSuccess = () => {
+        goto(`/`);
+    }
+
     const handleDelete = async (id) => {
         if (confirm('Are you sure you want to delete this trip?')) {
+            loading = true;
             const response = await deleteTrip(id, token);
             console.log(response);
             if (response.ok) {
-                handleSuccess(token)
+                handleSuccess()
             }
         }
     };
@@ -132,7 +135,7 @@
 {#if loading}
     <div class="loading-container">
         <LoadingIcon />
-        <p>Loading trip . . .</p>
+        <p>Loading . . .</p>
     </div>
 {:else}
     <div class="full-detail">
@@ -166,18 +169,27 @@
                 {#each tripRoutes as route (route.id)}
                 <!-- svelte-ignore a11y-click-events-have-key-events -->
                 <div class='route-item' on:click={goto(`/route_detail/${route.idString}`)}>
-                    <div class='map-container'>
-                        <StaticMap mapUrl={route.routeStaticMapUrl}/>
-                    </div>
-                    <div class='route-details'>
-                        <h4>{route.routeName}</h4>
-                        <p>
-                            Distance: <p2>{route.routeLength} {$units}</p2>
-                            <br>
-                            Elevation gain: <p2>{route.routeElevationGain} m</p2>
-                            <br>
-                            Elevation loss: <p2>{route.routeElevationLoss} m</p2>
-                        </p>
+                    <p2>{route.routeName}</p2>
+                    <div class='route-inner'>
+                        <div class='map-container'>
+                            <StaticMap mapUrl={route.routeStaticMapUrl}/>
+                        </div>
+                        <div class='route-details'>
+                            
+                            <p>
+                                Distance:
+                                <br>
+                                <p2>{route.routeLength} {$units}</p2>
+                                <br>
+                                Elevation gain:
+                                <br>
+                                <p2>{route.routeElevationGain} m</p2>
+                                <br>
+                                Elevation loss:
+                                <br>
+                                <p2>{route.routeElevationLoss} m</p2>
+                            </p>
+                        </div>
                         <button on:click={goto(`/route_detail/${route.idString}`)}>View route</button>
                     </div>
                 </div>
@@ -191,12 +203,12 @@
 <style>
     .full-detail {
         display: flex;
-        flex-direction: column; /* Change to column layout to stack elements vertically */
-        align-items: center; /* Center-align the contents horizontally */
-        justify-content: flex-start; /* Align contents to the top of the container */
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
         width: 100%;
-        /* overflow-y: auto; */
     }
+
     .trip-detail {
         position: relative;
         flex-grow: 1;
@@ -205,9 +217,11 @@
         margin: 20px auto;
         padding: 10px;
     }
+
     .basic-info {
         text-align: center;
         padding: 10px;
+        white-space: normal;
     }
     
     .map {
@@ -221,23 +235,22 @@
     .elev-chart {
         box-sizing: border-box;
         position: relative;
-        width: 800px;
+        width: 90%;
         margin: 0 auto;
     }
 
     .trip-route-feed {
         display: flex;
-        flex-direction: column; /* Change to column layout to stack elements vertically */
+        flex-direction: column;
         flex-grow: 1;
-        align-items: left; /* Center-align the contents horizontally */
+        align-items: left;
         padding: 5px;
         width: 100%;
-        
     }
 
     .trip-routes {
-        display: flex; /* Display items horizontally */
-        justify-content: flex-start; /* Align items to the start of the container */
+        display: flex;
+        justify-content: flex-start;
         flex-grow: 1;
         width: 80%;
         text-align: left;
@@ -246,21 +259,37 @@
         flex-wrap: nowrap;
         width: 100%;
         overflow-x: auto;
+        border: 2px solid rgba(38, 214, 149, 0.15);
+        box-shadow: 1px 2px 3px rgba(38, 214, 149, 0.192);
+        border-radius: 2px;
     }
 
     .route-item {
-        display: flex;
-        align-items: center;
-        gap: 5px;
-        background: rgba(0, 0, 0, 0.1);
-        padding: 5px;
+        display: inline-block;
+        text-align: center;
+        width: 220px;
+        padding: 10px;
         border-radius: 2px;
-        box-shadow: 2px 4px 6px rgba(38, 214, 149, 0.192);
+        box-shadow: 1px 2px 3px rgba(38, 214, 149, 0.192);
+        border: 2px solid rgba(38, 214, 149, 0.15);
         margin: 5px;
         cursor: pointer;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .route-inner {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        width: 100%;
+        height: 100%;
     }
 
     .map-container {
+        margin-top: 10px;
         width: 100px;
         height: 100px;
         overflow: hidden;

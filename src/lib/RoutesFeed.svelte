@@ -31,14 +31,12 @@
     });
 
     const fetchUserRoutes = async (headers) => {
-        console.log("Fetching User Routes");
         try {
             // Fetch user's routes from the backend
             const response = await fetch('http://localhost:3000/merkator/user/routes', { headers });
             if (response.ok) {
                 routesStore = await response.json();
                 userRoutes.set(routesStore); // Update the store
-                console.log("User routes updated:", routesStore);
             } else {
                 // Handle error, e.g., unauthorized
                 console.error('Failed to fetch user routes');
@@ -122,7 +120,7 @@
                     </div>
                 </div>
                 <div class="button-container">
-                    <button on:click={goto(`/route_detail/${route.idString}`)}>View route</button>
+                    <button on:click={goto(`/route_detail/${route.idString}`, loading=true)}>View route</button>
                     <button on:click={(event) => {event.stopPropagation(); handleDelete(route.idString);}}>Delete route</button>
                 </div>
             </div>
