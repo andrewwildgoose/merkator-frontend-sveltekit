@@ -27,7 +27,7 @@
         };
 
         try {
-            const response = await fetch("http://localhost:3000/merkator/user/new_trip", {
+            const response = await fetch(`http://${import.meta.env.VITE_VM_IP}:3000/merkator/user/new_trip`, {
                 method: "POST",
                 headers,
                 body: tripName,

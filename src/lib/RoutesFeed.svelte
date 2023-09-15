@@ -33,7 +33,7 @@
     const fetchUserRoutes = async (headers) => {
         try {
             // Fetch user's routes from the backend
-            const response = await fetch('http://localhost:3000/merkator/user/routes', { headers });
+            const response = await fetch(`http://${import.meta.env.VITE_VM_IP}:3000/merkator/user/routes`, { headers });
             if (response.ok) {
                 routesStore = await response.json();
                 userRoutes.set(routesStore); // Update the store

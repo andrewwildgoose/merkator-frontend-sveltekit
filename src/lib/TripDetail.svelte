@@ -42,7 +42,7 @@
         if (!trip) {
             try {
                 
-                const response = await fetch(`http://localhost:3000/merkator/user/trip/${tripId}`, { headers });
+                const response = await fetch(`http://${import.meta.env.VITE_VM_IP}:3000/merkator/user/trip/${tripId}`, { headers });
                 if (response.ok) {
                     trip = await response.json();
                     tripRoutes = findRoutesByIds(trip.tripRouteIds, $userRoutes);

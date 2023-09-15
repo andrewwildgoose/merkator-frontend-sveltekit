@@ -7,6 +7,7 @@
     import TripsFeed from "../lib/TripsFeed.svelte";
     import CompletedTripsFeed from "../lib/CompletedTripsFeed.svelte"
 
+
     let userDetails = null; // Store fetched user details
     let feedSelected = false;
     let showHomeFeed = false;
@@ -27,7 +28,7 @@
         };
         
         // Fetch user details from the backend
-        const response = await fetch('http://localhost:3000/merkator/user/details', { headers });
+        const response = await fetch(`http://${import.meta.env.VITE_VM_IP}:3000/merkator/user/details`, { headers });
         
         if (response.status === 403) {
                 // Redirect to login if 403 Forbidden is received
@@ -38,7 +39,6 @@
         if (response.ok) {
             userDetails = await response.json();
         } else {
-            // Handle error, e.g., unauthorized
             console.error('Failed to fetch user details');
         }
     });

@@ -42,7 +42,7 @@
         for (const routeId of selectedRouteIDs) {
             console.log("tripId: ", idString)
             console.log("routeId: ", routeId)
-            const response = await fetch('http://localhost:3000/merkator/user/trip/add_route', {
+            const response = await fetch(`http://${import.meta.env.VITE_VM_IP}:3000/merkator/user/trip/add_route`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

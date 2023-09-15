@@ -17,7 +17,7 @@
         };
         
         try{
-            const response = await fetch("http://localhost:3000/merkator/api/v1/auth/authenticate", {
+            const response = await fetch(`http://${import.meta.env.VITE_VM_IP}:3000/merkator/api/v1/auth/authenticate`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

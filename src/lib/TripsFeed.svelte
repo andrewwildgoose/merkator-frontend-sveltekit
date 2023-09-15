@@ -41,7 +41,7 @@
     const fetchUserTrips = async (headers) => {
         try {
             // Fetch user's trips from the backend
-            const response = await fetch('http://localhost:3000/merkator/user/trips', { headers });
+            const response = await fetch(`http://${import.meta.env.VITE_VM_IP}:3000/merkator/user/trips`, { headers });
             if (response.ok) {
                 tripsStore = await response.json();
                 userTrips.set(tripsStore);

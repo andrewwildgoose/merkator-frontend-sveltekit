@@ -15,7 +15,7 @@
             password: event.target.password.value
         };
 
-        const response = await fetch("http://localhost:3000/merkator/api/v1/auth/register", {
+        const response = await fetch(`http://${import.meta.env.VITE_VM_IP}:3000/merkator/api/v1/auth/register`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

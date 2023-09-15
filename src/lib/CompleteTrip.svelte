@@ -22,7 +22,7 @@
         };
 
         try {
-            const response = await fetch(`http://localhost:3000/merkator/user/trip/route_mappings?tripId=${tripId}`, {
+            const response = await fetch(`http://${import.meta.env.VITE_VM_IP}:3000/merkator/user/trip/route_mappings?tripId=${tripId}`, {
                 method: "GET",
                 headers,
             });
@@ -72,7 +72,7 @@
         };
 
         try {
-            const response = await fetch("http://localhost:3000/merkator/user/complete_trip", {
+            const response = await fetch(`http://${import.meta.env.VITE_VM_IP}:3000/merkator/user/complete_trip`, {
                 method: "POST",
                 headers,
                 body: formData,

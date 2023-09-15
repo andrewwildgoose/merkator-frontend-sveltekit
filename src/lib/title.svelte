@@ -18,7 +18,7 @@
         };
         
         // Fetch user details from the backend
-        const response = await fetch('http://localhost:3000/merkator/user/details', { headers });
+        const response = await fetch(`http://${import.meta.env.VITE_VM_IP}:3000/merkator/user/details`, { headers });
         
         if (response.status === 403) {
                 // Redirect to login if 403 Forbidden is received

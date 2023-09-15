@@ -36,7 +36,7 @@
         try {
             console.log('Fetching user completed trips');
             // Fetch user's trips from the backend
-            const response = await fetch('http://localhost:3000/merkator/user/completed_trips', { headers });
+            const response = await fetch(`http://${import.meta.env.VITE_VM_IP}:3000/merkator/user/completed_trips`, { headers });
             if (response.ok) {
                 compTripsStore = await response.json();
                 userCompletedTrips.set(compTripsStore);
