@@ -1,3 +1,5 @@
+<!-- Map component when displaying a single route -->
+
 <script>
     import { onMount } from 'svelte';
     import mapboxgl from "mapbox-gl";
@@ -107,7 +109,6 @@
             };
             
             // Add the end marker layer
-
             const finishImage = new Image();
             finishImage.src = finishIcon;
             console.log(end);

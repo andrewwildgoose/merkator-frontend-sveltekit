@@ -1,3 +1,6 @@
+<!-- Main page once logged in, will populate with the selected 
+feed of planned routes and trips or completed trips  -->
+
 <script>
     
     import { onMount } from 'svelte';
@@ -8,7 +11,7 @@
     import CompletedTripsFeed from "../lib/CompletedTripsFeed.svelte"
 
 
-    let userDetails = null; // Store fetched user details
+    let userDetails = null;
     let feedSelected = false;
     let showHomeFeed = false;
     let showPlannedFeed = false;
@@ -201,7 +204,6 @@
         justify-content: space-between;
         overflow-y: hidden;
         overflow-x: auto;
-        /* border-top: 4px solid rgba(38, 214, 149, 0.3); */
     }
 
     .feed-container {

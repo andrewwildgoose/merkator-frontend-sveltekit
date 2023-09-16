@@ -1,4 +1,4 @@
-
+<!-- Loading icon used site wide -->
 
 <div class="loading-icon"></div>
 

@@ -1,3 +1,5 @@
+<!-- Component to display a user's feed of completed trips -->
+
 <script>
     import { onMount } from 'svelte';
     import { goto } from '$app/navigation';
@@ -8,7 +10,7 @@
 
     let compTripsStore;
     let token;
-    let loading = true; // Added loading indicator
+    let loading = true;
 
     onMount(async () => {
         token = localStorage.getItem('token');

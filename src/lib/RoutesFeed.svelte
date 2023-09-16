@@ -1,3 +1,5 @@
+<!-- Component to display a user's feed of planned routes -->
+
 <script>
     import { onMount } from 'svelte';
     import { goto } from '$app/navigation';

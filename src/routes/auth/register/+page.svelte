@@ -1,3 +1,5 @@
+<!-- Page for new users to register -->
+
 <script>
     import { invalidateAll, goto } from '$app/navigation';
     import { applyAction } from '$app/forms';
@@ -102,6 +104,12 @@
         border-radius: 3px;
     }
 
+    .register  input:focus {
+        border: 1px solid rgba(38, 214, 150, 1);
+        border-radius: 3px;
+        outline: none;
+    }
+
     .register  button {
         border: none;
         padding: 10px 15px;
@@ -109,8 +117,8 @@
         cursor: pointer;
         display: block;
         margin: 0 auto;
-        /* border: 1px solid rgba(38, 214, 150, 0.2); */
     }
+
     .register  button:hover {
         background-color: rgba(38, 214, 150, 0.2);
 	    border-color: rgba(38, 214, 150, 0.2);

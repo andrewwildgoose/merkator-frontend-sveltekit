@@ -1,3 +1,5 @@
+<!-- Add new trip to user's trips -->
+
 <script>
 
     import { createEventDispatcher } from 'svelte';
@@ -6,6 +8,7 @@
     let tripName = '';
     let errorMessage = '';
 
+    // Handle form submission and add new trip to user's trips
     const handleSubmit = async (event) => {
         event.preventDefault();
 

@@ -1,3 +1,5 @@
+<!-- Component to add a new route to a user's routes -->
+
 <script>
 
     import { createEventDispatcher } from 'svelte';
@@ -59,13 +61,12 @@
 </script>
 
 
-<!-- main div container -->
+
 <div class="route-upload">
     <h2>Upload Route</h2>
     <p>Select a GPX file to add to your routes</p>
-    <!-- form element -->
     <form on:submit={handleSubmit}>
-        <!-- file upload handling -->
+
         <label class="file-upload-label">
             <input type="file" accept=".gpx" bind:files={selectedFiles} />
             {#if selectedFiles[0]}
@@ -73,12 +74,10 @@
                 {:else}Select route GPX file
             {/if}
         </label>
-        <!-- route name input -->
         <label class="route-name">
             Route name:
             <input type="text" bind:value={routeName} />
         </label>
-    <!-- subimssion handling -->
     <button type="submit">Upload</button>
     {#if errorMessage}
         <p class="error">{errorMessage}</p>

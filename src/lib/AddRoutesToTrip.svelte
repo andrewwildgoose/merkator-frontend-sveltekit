@@ -1,3 +1,5 @@
+<!-- Component to add routes to a trip -->
+
 <script>
     import { userRoutes } from '../stores';
     import LoadingIcon from './LoadingIcon.svelte';
@@ -15,6 +17,7 @@
     }
     const dispatch = createEventDispatcher();
 
+    // Handle the routes that are selected to be added to a trip
     const toggleRouteSelection = (routeId) => {
         if (selectedRouteIDs.includes(routeId)) {
             selectedRouteIDs = selectedRouteIDs.filter(id => id !== routeId);
@@ -60,9 +63,6 @@
                 return;
             }
         }
-
-        // Handle success, such as updating the trips or showing a success message
-        // ...
 
         // Reset selectedRouteIDs
         selectedRouteIDs = [];

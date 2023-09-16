@@ -1,3 +1,5 @@
+<!-- Component to display interactive maps for planned and completed trips -->
+
 <script>
     import { onMount } from 'svelte';
     import mapboxgl from "mapbox-gl";
@@ -10,7 +12,7 @@
     export let tripRouteColours = [];
     export let plannedRoutes;
     export let length;
-    let tripCoordinates = []; // Initialize an array to store all coordinates
+    let tripCoordinates = [];
     let mapContainer;
     let map;
     let start;
@@ -177,7 +179,7 @@
                     console.error('Error creating source or layer:', error);
                 };
             }
-            // If present, add the current marker layer
+            // If present, add the current marker layer for completed trips
             if (currentMarkerCoords !== null) {
                 const currentImage = new Image();
                 currentImage.src = currentIcon;

@@ -1,3 +1,5 @@
+<!-- Page for displaying a user's details. Not yet in use. -->
+
 <script>
     import { onMount } from 'svelte';
     import { goto } from '$app/navigation';

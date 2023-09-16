@@ -1,3 +1,6 @@
+<!-- Componenet to show the detail page of a planned trip  -->
+<!-- including interactive map and elevation graph -->
+
 <script>
     import { onMount } from 'svelte';
     import { goto } from '$app/navigation';

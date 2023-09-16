@@ -1,3 +1,5 @@
+<!-- Generic card to load information into -->
+
 <div class="card">
     <slot></slot>
 </div>

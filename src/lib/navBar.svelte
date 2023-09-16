@@ -1,3 +1,5 @@
+<!-- Site navigation bar -->
+
 <script>
     import Title from '$lib/title.svelte'
     import { onMount } from 'svelte';

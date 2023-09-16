@@ -1,3 +1,5 @@
+<!-- Modal component used site wide to display conent overlayed on the current page -->
+
 <script>
     import Card from "./card.svelte";
 

@@ -1,3 +1,5 @@
+<!-- Overall site layout -->
+
 <script>
     import NavBar from '../lib/NavBar.svelte';
     import '../styles/global.css';

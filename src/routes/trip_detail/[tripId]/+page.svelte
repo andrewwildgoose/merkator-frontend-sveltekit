@@ -1,3 +1,6 @@
+<!-- Page to show details of a planned trip -->
+
+
 <script>
     import { page } from '$app/stores';
     import TripDetail from '../../../lib/TripDetail.svelte'

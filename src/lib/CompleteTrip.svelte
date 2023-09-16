@@ -1,3 +1,6 @@
+<!-- Component for when a user wants to upload completed routes 
+to a trip and create a new completred trip -->
+
 <script>
     import { onMount } from 'svelte';
     import { goto } from '$app/navigation';
@@ -16,6 +19,7 @@
         fetchRouteMappings(tripId);
     });
 
+    // fetch the planned route details to match with the completed routes to be uploaded
     const fetchRouteMappings = async () => {
         const headers = {
             'Authorization': `Bearer ${token}`
@@ -42,6 +46,8 @@
         }
     }
 
+    // Handle a completed route file being uploaded
+    // Match it to the planned route it has been added to
     const handleFileInput = (event, routeIndex) => {
         const file = event.target.files[0];
         if (file) {
@@ -51,6 +57,7 @@
         }
     };
 
+    // Upload the given completed route files and send to create a new completed trip
     const uploadFiles = async () => {
         completingTrip = true;
         const selectedRoutes = routeMapping.filter(route => route.selected);
@@ -162,7 +169,6 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        /* position: fixed; */
         z-index: 1;
         left: 0;
         top: 0;

@@ -1,3 +1,5 @@
+<!-- component to display a static image of a map when interactive map is not required -->
+
 <script>
     export let mapUrl;
 </script>

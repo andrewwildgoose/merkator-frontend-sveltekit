@@ -41,6 +41,12 @@ input, button, select, textarea {
 	background-color: rgba(38, 214, 150, 0.15);
 }
 
+input:focus {
+	border: 1px solid rgba(38, 214, 150, 1);
+	border-radius: 3px;
+	outline: none;
+}
+
 input:disabled {
 	color: #ccc;
 }

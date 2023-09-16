@@ -1,3 +1,5 @@
+<!-- Elevation chart componenet for displaying elevation graphs on detail pages -->
+
 <script>
     import Chart from 'svelte-frappe-charts';
 

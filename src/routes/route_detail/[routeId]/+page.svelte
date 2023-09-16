@@ -1,3 +1,6 @@
+<!-- Page to show details of a planned route -->
+
+
 <script>
     import { page } from '$app/stores';
     import RouteDetail from '../../../lib/RouteDetail.svelte'

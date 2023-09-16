@@ -1,3 +1,5 @@
+<!-- Component to display user's name and welcome message if present -->
+
 <script>
     import { onMount } from 'svelte';
     import { goto } from '$app/navigation';

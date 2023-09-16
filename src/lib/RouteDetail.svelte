@@ -1,3 +1,6 @@
+<!-- Componenet to show the detail page of a single route  -->
+<!-- including interactive map and elevation graph -->
+
 <script>
     import { onMount } from 'svelte';
     import { goto } from '$app/navigation';
@@ -21,7 +24,7 @@
             return;
         }
 
-        // Elevation graph
+        // Elevation graph data building
 
         // Parse GPX data for elevation graph
         const routeData = JSON.parse(route.routeGpxString);

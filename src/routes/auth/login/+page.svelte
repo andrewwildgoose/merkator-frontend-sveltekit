@@ -1,3 +1,5 @@
+<!-- User log in page -->
+
 <script>
     import { invalidateAll, goto } from '$app/navigation';
     import LoadingIcon from '../../../lib/LoadingIcon.svelte';
@@ -31,7 +33,7 @@
                 // Store the JWT in local storage
                 localStorage.setItem('token', result.token);
 
-                // rerun all `load` functions, following the successful update
+                // rerun all load functions, following the successful update
                 await invalidateAll();
                 goto("/"); // Redirect to home page after registration
                 console.log("redirected")
@@ -107,6 +109,12 @@
         border-radius: 3px;
     }
 
+    .login  input:focus {
+        border: 1px solid rgba(38, 214, 150, 1);
+        border-radius: 3px;
+        outline: none;
+    }
+
     .login button {
         border: none;
         padding: 10px 15px;
@@ -114,7 +122,7 @@
         cursor: pointer;
         display: block;
         margin: 0 auto;
-        /* border: 1px solid rgba(38, 214, 150, 0.2); */
+
     }
     .login button:hover {
         background-color: rgba(38, 214, 150, 0.2);

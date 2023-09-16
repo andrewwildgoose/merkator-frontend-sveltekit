@@ -1,3 +1,5 @@
+<!-- Component to display a user's feed of planned trips -->
+
 <script>
     import { onMount } from 'svelte';
     import { goto } from '$app/navigation';
@@ -13,8 +15,8 @@
 
     let tripsStore;
     let token;
-    let loading = true; // Added loading indicator
-    let selectedModalProps; // Props to pass modal component
+    let loading = true;
+    let selectedModalProps;
     let selectedModalComponent = null;
     let showOptionsFor = null;
     let showOptions = false;
@@ -59,12 +61,14 @@
         showOptions = !showOptions;
     }
 
+    // Open the overlay to add routes to the selected trip
     const openRoutesOverlay = (selectedTripForRoutes) => {
         selectedModalComponent = AddRoutesToTrip;
         selectedModalProps = selectedTripForRoutes;
         modalOpen = true;
     };
 
+    // Reload the trip feed on a success event
     const handleSuccess = () => {
         loading = true;
         console.log("TF: handling success")
@@ -87,6 +91,7 @@
         }
     };
 
+    // Open the modal to add a new trip
     const openCreateModal = () => {
         selectedModalComponent = AddTrip;
         modalOpen = true;
@@ -97,20 +102,21 @@
         showModal(CompleteTrip, tripId) 
     }
     
+    // Show a modal with the selected component
     const showModal = (component, tripId) => {
         selectedModalComponent = component;
         selectedModalProps = { tripId };
         modalOpen = true;
         console.log("Modal Components & Props: ", selectedModalComponent, selectedModalProps)
     };
-    
+
+    // Close the modal    
     const closeModal = () => {
         console.log("TF: close modal received")
         selectedModalComponent = null;
         selectedModalProps = null;
         modalOpen = false;
     };
-
 
 </script>
 
