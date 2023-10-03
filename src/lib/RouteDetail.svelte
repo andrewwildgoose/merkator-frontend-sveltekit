@@ -7,6 +7,11 @@
     import { units, deleteRoute, rgbToHex } from '../stores';
     import PolyMap from "./PolyMap.svelte";
     import ElevationChart from './ElevationChart.svelte';
+    import Card from './card.svelte';
+    import distIcon from '$lib/assets/distance-detail-icon.svg';
+    import elevGainIcon from '$lib/assets/elev-gain-icon.svg';
+    import elevLossIcon from '$lib/assets/elev-loss-icon.svg';
+    import LoadingIcon from './LoadingIcon.svelte';
 
     export let route;
 
@@ -71,41 +76,52 @@
 </script>
 
 {#if loading}
-    <p>Loading route details...</p>
+    <div class="loading-container">
+        <LoadingIcon />
+        <p>Loading route details . . .</p>
+    </div>
 {:else}
+<div class ="full-detail">
     <div class="route-detail">
         <h2>{route.routeName}</h2>
         <div class="map">
             <PolyMap routeGpxString={route.routeGpxString} color={colors[0]}/>
         </div>
         <div class="basic-info">
-            <p>
-            Distance: <p2>{route.routeLength} {$units}</p2>  |  
-            Elevation gain: <p2>{route.routeElevationGain} m</p2>  |  
-            Elevation loss: <p2>{route.routeElevationLoss} m</p2>  
-            {#if route.routeDescription !== "Optional.empty"}|  {route.routeDescription}{/if}
-        </p>
+            <Card>
+                <img class='info-icon' src={distIcon} alt="Distance"/><br><p2>{route.routeLength} {$units}</p2>
+            </Card>
+            <Card>
+                <img class='info-icon' src={elevGainIcon} alt="Elevation gain"><br><p2>{route.routeElevationGain} m</p2>
+            </Card>
+            <Card>
+                <img class='info-icon' src={elevLossIcon} alt="Elevation loss"><br><p2>{route.routeElevationLoss} m</p2> 
+            </Card>
+            <p>{#if route.routeDescription !== "Optional.empty"}|  {route.routeDescription}{/if}</p>
         </div>
         <div class="elev-chart">
             <h4>Elevation chart</h4>
             <ElevationChart data={data} colors={colors}/>
         </div>
-        
-        
         <button on:click={() => handleDelete(route.idString)}>Delete route</button>
     </div>
+</div>
 {/if}
 
 <style>
     .route-detail {
         position: relative;
+        flex-grow: 1;
         text-align: left;
         display: block;
         margin: 20px auto;
+        padding: 10px;
     }
     .basic-info {
+        display: flex;
+        justify-content: center;
+        align-items: center;
         text-align: center;
-        padding: 10px;
     }
     
     .map {
@@ -116,10 +132,5 @@
         width: 100%;
         margin: 0 auto;
     }
-    .elev-chart {
-        box-sizing: border-box;
-        position: relative;
-        width: 800px;
-        margin: 0 auto;
-    }
+
 </style>

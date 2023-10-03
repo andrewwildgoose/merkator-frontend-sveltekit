@@ -9,6 +9,12 @@
     import StaticMap from './StaticMap.svelte';
     import LoadingIcon from './LoadingIcon.svelte';
     import ElevationChart from './ElevationChart.svelte';
+    import Card from './card.svelte';
+    import distIcon from '$lib/assets/distance-detail-icon.svg';
+    import elevGainIcon from '$lib/assets/elev-gain-icon.svg';
+    import elevLossIcon from '$lib/assets/elev-loss-icon.svg';
+    import numRoutesIcon from '$lib/assets/num-routes-icon.svg';
+
 
     export let trip;
     export let tripId
@@ -138,7 +144,7 @@
 {#if loading}
     <div class="loading-container">
         <LoadingIcon />
-        <p>Loading . . .</p>
+        <p>Loading trip details . . .</p>
     </div>
 {:else}
     <div class="full-detail">
@@ -153,13 +159,19 @@
                 length={trip.tripLength} />
             </div>
             <div class="basic-info">
-                <p>
-                Distance: <p2>{trip.tripLength} {$units} </p2> |   
-                Elevation gain: <p2>{trip.tripElevationGain} m</p2>  |   
-                Elevation loss: <p2>{trip.tripElevationLoss} m</p2>  |   
-                No. of routes: <p2>{trip.routeCount}   </p2>
+                <Card>
+                    <img class='info-icon' src={distIcon} alt="Distance"/><br><p2>{trip.tripLength} {$units} </p2>
+                </Card>
+                <Card>
+                    <img class='info-icon' src={elevGainIcon} alt="Elevation gain"><br><p2>{trip.tripElevationGain} m</p2>
+                </Card>
+                <Card>
+                    <img class='info-icon' src={elevLossIcon} alt="Elevation loss"><br><p2>{trip.tripElevationLoss} m</p2>
+                </Card>
+                <Card>
+                    <img class='info-icon' src={numRoutesIcon} alt="No. of routes"><br><p2>{trip.routeCount} routes</p2>
+                </Card>
                 {#if trip.tripDescription !== null}|  {trip.tripDescription}{/if}
-                </p>
             </div>
             <div class="elev-chart">
                 <h4>Elevation chart</h4>
@@ -180,16 +192,16 @@
                         <div class='route-details'>
                             
                             <p>
-                                Distance:
-                                <br>
+                                <img class='info-icon-small' src={distIcon} alt="Distance"/>
+                                
                                 <p2>{route.routeLength} {$units}</p2>
                                 <br>
-                                Elevation gain:
-                                <br>
+                                <img class='info-icon-small' src={elevGainIcon} alt="Elevation gain">
+                                
                                 <p2>{route.routeElevationGain} m</p2>
                                 <br>
-                                Elevation loss:
-                                <br>
+                                <img class='info-icon-small' src={elevLossIcon} alt="Elevation loss">
+                                
                                 <p2>{route.routeElevationLoss} m</p2>
                             </p>
                         </div>
@@ -204,14 +216,6 @@
 {/if}
 
 <style>
-    .full-detail {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
-        width: 100%;
-    }
-
     .trip-detail {
         position: relative;
         flex-grow: 1;
@@ -222,9 +226,10 @@
     }
 
     .basic-info {
+        display: flex;
+        justify-content: center;
+        align-items: center;
         text-align: center;
-        padding: 10px;
-        white-space: normal;
     }
     
     .map {
@@ -233,12 +238,6 @@
         box-sizing: border-box;
         position: relative;
         width: 100%;
-        margin: 0 auto;
-    }
-    .elev-chart {
-        box-sizing: border-box;
-        position: relative;
-        width: 90%;
         margin: 0 auto;
     }
 
@@ -253,7 +252,7 @@
 
     .trip-routes {
         display: flex;
-        justify-content: flex-start;
+        justify-content: center;
         flex-grow: 1;
         width: 80%;
         text-align: left;
@@ -299,7 +298,12 @@
     }
 
     .route-details {
+        text-align: left;
         white-space: nowrap;
         text-overflow: ellipsis;
+    }
+    .info-icon-small {
+        width: 20px;
+        height: 20px;
     }
 </style>

@@ -214,10 +214,16 @@ input[type="file"] {
 	cursor: pointer;
 }
 
-.loading-container {
+
+/* General styling */
+
+/* Detail page styling */
+.full-detail { 
 	display: flex;
-	justify-content: center;
+	flex-direction: column;
 	align-items: center;
+	justify-content: flex-start;
+	width: 100%;
 }
 
 .elev-chart {
@@ -225,4 +231,16 @@ input[type="file"] {
 	position: relative;
 	width: 90%;
 	margin: 0 auto;
+}
+
+.info-icon {
+	width: 30px;
+	height: 30px;
+}
+
+/* Transition styling */
+.loading-container {
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
